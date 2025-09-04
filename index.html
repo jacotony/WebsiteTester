@@ -2480,15 +2480,38 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // If user flips to Podcast manually, keep Category in sync
   var mtSel = document.getElementById('media-type');
-  if(mtSel){
-    mtSel.addEventListener('change', function(){
-      if(this.value==='podcast'){ setGenre('podcast'); }
+  if (mtSel) {
+    mtSel.addEventListener('change', function () {
+      if (this.value === 'podcast') { setGenre('podcast'); }
     });
   }
-})();
-</script>
 
-</script>
+  /* --------- show success modal after a real submit success ---------- */
+  var formEl = document.getElementById('book-form');
+  if (formEl) {
+    formEl.addEventListener('submit', function () {
+      var scopeAtSubmit = (typeof currentScope !== 'undefined') ? currentScope : 'main';
+      setTimeout(function () {
+        try {
+          var arr = (typeof ACTIV === 'function') ? ACTIV() : [];
+          var last = arr && arr[0];
+          if (last && last.type === 'share' && last.payload && last.payload.user === window.currentUser) {
+            var b = (typeof BOOKS === 'function' && BOOKS()[0]) ? BOOKS()[0] : null;
+            var nameEl = document.getElementById('series-name-input');
+            var numEl  = document.getElementById('series-number-input');
+            if (b && nameEl && numEl) {
+              b.seriesName   = (nameEl.value || '').trim();
+              b.seriesNumber = (numEl.value  || '').trim();
+              if (typeof saveAll === 'function') saveAll();
+            }
+            lastRecommendedScope = scopeAtSubmit;
+            openAfterShare();
+          }
+        } catch (_e) {}
+      }, 80);
+    });
+  }
+});  <!-- closes document.addEventListener('DOMContentLoaded', ...) -->
 </script>
 </body>
 </html>
