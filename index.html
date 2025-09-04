@@ -2139,7 +2139,358 @@ function findBookById(id){
   if(b) return b;
   return OTHER_BOOKS().find(function(x){return String(x.id)===id;});
 }
+  <script>
+/* === Success screen + Series (hidden) + Category/Series autofill — drop-in patch === */
+document.addEventListener('DOMContentLoaded', function(){
+
+  /* ----------------------- success modal ----------------------- */
+  var after = document.createElement('div');
+  after.id = 'after-share-modal';
+  after.className = 'toast';
+  after.style.left = '50%';
+  after.style.transform = 'translate(-50%,0)';
+  after.style.bottom = 'auto';
+  after.style.top = '20%';
+  after.style.maxWidth = '520px';
+  after.style.pointerEvents = 'auto';
+  after.innerHTML = [
+    '<div>',
+      '<h3 style="margin-bottom:6px">Your recommendation was posted!</h3>',
+      '<p class="small" style="margin-bottom:10px">What would you like to do next?</p>',
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">',
+        '<button class="nav-btn" data-act="again" type="button">Recommend More</button>',
+        '<button class="nav-btn" data-act="fun" type="button">Fun Books</button>',
+        '<button class="nav-btn" data-act="well" type="button">Wellness</button>',
+        '<button class="nav-btn" data-act="lists" type="button">My Lists</button>',
+        '<button class="nav-btn" data-act="close" type="button" style="background:#b74a4a;border-color:#5c1f1f">Close</button>',
+      '</div>',
+    '</div>'
+  ].join('');
+  document.body.appendChild(after);
+
+  // make it center like the finish modal
+  var st = document.createElement('style');
+  st.textContent = '#after-share-modal.show{transform:translate(-50%,0);}';
+  document.head.appendChild(st);
+
+  var lastRecommendedScope = null;
+  function openAfterShare(){ after.classList.add('show'); }
+  function closeAfterShare(){ after.classList.remove('show'); }
+
+  after.addEventListener('click', function(e){
+    var act = e.target && e.target.getAttribute('data-act');
+    if(!act) return;
+    if(act==='again'){
+      if(typeof setScope==='function' && lastRecommendedScope){ setScope(lastRecommendedScope); }
+      if(typeof openSection==='function'){ openSection('add'); }
+      closeAfterShare();
+    }else if(act==='fun'){
+      if(typeof setScope==='function'){ setScope('main'); }
+      if(typeof openSection==='function'){ openSection('feed'); }
+      closeAfterShare();
+    }else if(act==='well'){
+      if(typeof setScope==='function'){ setScope('wellness'); }
+      if(typeof openSection==='function'){ openSection('feed'); }
+      closeAfterShare();
+    }else if(act==='lists'){
+      if(typeof openSection==='function'){ openSection('my-books'); }
+      closeAfterShare();
+    }else if(act==='close'){
+      if(typeof setScope==='function' && lastRecommendedScope){ setScope(lastRecommendedScope); }
+      if(typeof openSection==='function'){ openSection('feed'); }
+      closeAfterShare();
+    }
+  });
+
+  /* --------- add Series UI (hidden behind a pill button) -------- */
+  (function addSeriesUI(){
+    var form = document.getElementById('book-form');
+    if(!form) return;
+
+    // container right before the Tags block
+    var tagsBlock = document.getElementById('tags-container')?.parentNode || form.lastElementChild;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'series-wrap';
+    wrap.innerHTML = [
+      '<div style="display:flex;align-items:center;gap:8px;margin:8px 0">',
+        '<button class="pill-btn" id="series-toggle" type="button" title="Show series fields">Series (optional)</button>',
+        '<span class="small" id="series-status" style="color:#2b3832;display:none">Auto-detected</span>',
+      '</div>',
+      '<div id="series-fields" style="display:none">',
+        '<div class="search" style="grid-template-columns:2fr 1fr">',
+          '<div><label class="small">Series Name</label><input class="input" id="series-name-input" placeholder="e.g., The Stormlight Archive"></div>',
+          '<div><label class="small">Series Number</label><input class="input" id="series-number-input" placeholder="e.g., 1"></div>',
+        '</div>',
+      '</div>'
+    ].join('');
+    tagsBlock.parentNode.insertBefore(wrap, tagsBlock);
+
+    document.getElementById('series-toggle').addEventListener('click', function(){
+      var f = document.getElementById('series-fields');
+      f.style.display = (f.style.display==='none' || !f.style.display) ? 'block' : 'none';
+    });
+  })();
+
+  /* ------------- Category + Series: populate from pick ------------- */
+  function normalize(s){ return String(s||'').toLowerCase().replace(/&/g,'and').trim(); }
+  function setGenre(value){
+    var sel=document.getElementById('genre'); if(!sel) return;
+    var want=String(value||'').toLowerCase();
+    var ok = Array.prototype.some.call(sel.options, function(o){ return o.value===want; });
+    sel.value = ok ? want : (want||'other');
+    if(!ok && sel.value!=='other') sel.value='other';
+  }
+  function guessCategoryFrom(result){
+    if(result && result.type==='podcast') return 'podcast';
+    var cats = (result && result.categories || []).map(normalize);
+    var map = {
+      'science fiction':'sci-fi','sci fi':'sci-fi','sci-fi':'sci-fi',
+      'young adult':'young adult','ya':'young adult',
+      'mystery':'mystery','detective':'mystery',
+      'thriller':'thriller','suspense':'thriller',
+      'romance':'romance','fantasy':'fantasy','horror':'horror',
+      'history':'history','memoir':'memoir','biography':'biography',
+      'business and economics':'business','business':'business',
+      'self-help':'self-help','self help':'self-help',
+      'psychology':'psychology','philosophy':'philosophy',
+      'religion':'spirituality/religion','spirituality':'spirituality/religion',
+      'health and fitness':'health & fitness','health':'health & fitness','fitness':'health & fitness',
+      'technology':'technology','poetry':'poetry',
+      'graphic novels':'comics/graphic novel','comics & graphic novels':'comics/graphic novel','comics':'comics/graphic novel',
+      'dystopian':'dystopian','literary':'literary fiction','classics':'classics'
+    };
+    for(var i=0;i<cats.length;i++){
+      var raw=cats[i];
+      if(map[raw]) return map[raw];
+      if(/sci[-\s]?fi|science\s*fiction/.test(raw)) return 'sci-fi';
+      if(/young\s*adult|^\s*ya\s*$/.test(raw)) return 'young adult';
+      if(/mystery|detective|crime/.test(raw)) return 'mystery';
+      if(/thriller|suspense/.test(raw)) return 'thriller';
+      if(/fantasy/.test(raw)) return 'fantasy';
+      if(/romance/.test(raw)) return 'romance';
+      if(/horror/.test(raw)) return 'horror';
+      if(/memoir|autobiograph/.test(raw)) return 'memoir';
+      if(/biograph/.test(raw)) return 'biography';
+      if(/business|economics|finance|management|startup/.test(raw)) return 'business';
+      if(/self[-\s]?help|productivity|habits/.test(raw)) return 'self-help';
+      if(/psychology|behavior|cognitive/.test(raw)) return 'psychology';
+      if(/philosophy|ethic|stoic/.test(raw)) return 'philosophy';
+      if(/relig|christian|faith|spirit/.test(raw)) return 'spirituality/religion';
+      if(/health|fitness|wellness|sleep|stress/.test(raw)) return 'health & fitness';
+      if(/technology|computer|programming|software/.test(raw)) return 'technology';
+      if(/poetry/.test(raw)) return 'poetry';
+      if(/dystop/.test(raw)) return 'dystopian';
+      if(/literary/.test(raw)) return 'literary fiction';
+    }
+    var s=normalize((result && result.description) || '');
+    if(/sci[-\s]?fi|science\s*fiction/.test(s)) return 'sci-fi';
+    if(/mystery|detective|crime/.test(s)) return 'mystery';
+    if(/fantasy/.test(s)) return 'fantasy';
+    if(/romance/.test(s)) return 'romance';
+    if(/thriller|suspense/.test(s)) return 'thriller';
+    return 'other';
+  }
+
+  // series parsing
+  function parseSeriesFromTitle(t){
+    var out = {name:'', number:''};
+    if(!t) return out;
+    // Patterns like: "Title (Series Name, #1)" OR "(Series Name Book 1)"
+    var m = t.match(/\(([^)]+?)(?:,?\s*(?:book|bk|volume|vol\.?|#)\s*(\d+))?\)/i);
+    if(m){
+      // m[1] might be "The Stormlight Archive" or "The Stormlight Archive, #1"
+      var pNum = m[1].match(/(?:^|,\s*)(?:book|bk|volume|vol\.?|#)\s*(\d+)/i);
+      out.name = m[1].replace(/,\s*#?\d+.*$/,'').replace(/\s*(book|bk|volume|vol\.?)\s*\d+$/i,'').trim();
+      out.number = (m[2] || (pNum && pNum[1]) || '').trim();
+      return out;
+    }
+    // "#1" somewhere after a dash/colon
+    var m2 = t.match(/-\s*([^–—:]+)\s*[,–—:]?\s*#\s*(\d+)/i);
+    if(m2){ out.name = m2[1].trim(); out.number = m2[2].trim(); return out; }
+    // "Book 2 of <Series>"
+    var m3 = t.match(/book\s*(\d+)\s*of\s*([^:()]+)/i);
+    if(m3){ out.number=m3[1]; out.name=m3[2].trim(); return out; }
+    return out;
+  }
+  function parseSeriesFromDesc(d){
+    var out = {name:'', number:''};
+    if(!d) return out;
+    var m = d.match(/(?:book|bk|volume|vol\.?)\s*(\d+)\s*(?:of|in)\s*([A-Z][\w '\-:]+)/i);
+    if(m){ out.number=m[1]; out.name=m[2].replace(/\.$/,'').trim(); return out; }
+    return out;
+  }
+  function setSeries(name,num, auto){
+    var f = document.getElementById('series-fields');
+    var nameEl = document.getElementById('series-name-input');
+    var numEl  = document.getElementById('series-number-input');
+    var status = document.getElementById('series-status');
+    if(!nameEl || !numEl) return;
+    if(name) nameEl.value = name;
+    if(num)  numEl.value  = num;
+    if(auto && (name || num)){
+      status.style.display = 'inline';
+      // open the fields so they can see/edit
+      if(f && (f.style.display==='none' || !f.style.display)){
+        f.style.display = 'block';
+      }
+    }
+  }
+
+  // When a search result is picked, fill Category + Series
+  document.addEventListener('click', function(e){
+    var pick = e.target.closest && e.target.closest('[data-pick]');
+    if(!pick) return;
+    var i = Number(pick.getAttribute('data-pick'));
+    if(isNaN(i) || !Array.isArray(window.lastSearchItems)) return;
+    var item = window.lastSearchItems[i]; if(!item) return;
+
+    // Ensure media type matches
+    var mt = document.getElementById('media-type');
+    if(mt){ mt.value = (item.type==='podcast' ? 'podcast' : 'book'); }
+
+    // Category
+    setGenre(guessCategoryFrom(item));
+
+    // Series (books: parse from title/description; podcast: usually show title == series)
+    if(item.type==='podcast'){
+      // Podcasts are inherently "series" shows; leave number blank
+      setSeries(item.title || '', '', true);
+    }else{
+      var fromT = parseSeriesFromTitle(item.title || '');
+      var fromD = parseSeriesFromDesc(item.description || '');
+      var name = fromT.name || fromD.name || '';
+      var num  = fromT.number || fromD.number || '';
+      if(name || num) setSeries(name, num, true);
+    }
+  }, true); // capture so it runs before default handlers if needed
+
+  // Keep Category in sync with manual media-type flip
+  var mtSel = document.getElementById('media-type');
+  if(mtSel){
+    mtSel.addEventListener('change', function(){
+      if(this.value==='podcast'){ setGenre('podcast'); }
+    });
+  }
+
+  /* --------- show success modal after a real submit success ---------- */
+  var formEl = document.getElementById('book-form');
+  if(formEl){
+    formEl.addEventListener('submit', function(){
+      var scopeAtSubmit = (typeof currentScope!=='undefined') ? currentScope : 'main';
+      // wait a tick for the original handler to create activity + push book
+      setTimeout(function(){
+        try{
+          var arr = (typeof ACTIV==='function') ? ACTIV() : [];
+          var last = arr && arr[0];
+          if(last && last.type==='share' && last.payload && last.payload.user===window.currentUser){
+            // Add series fields onto the most recent book in current scope
+            var b = (typeof BOOKS==='function' && BOOKS()[0]) ? BOOKS()[0] : null;
+            var nameEl = document.getElementById('series-name-input');
+            var numEl  = document.getElementById('series-number-input');
+            if(b && nameEl && numEl){
+              b.seriesName   = (nameEl.value||'').trim();
+              b.seriesNumber = (numEl.value||'').trim();
+              if(typeof saveAll==='function') saveAll();
+            }
+            lastRecommendedScope = scopeAtSubmit;
+            openAfterShare();
+          }
+        }catch(_e){}
+      }, 80);
+    });
+  }
+});
+  <script>
+/* === Category autopopulate fix (books + podcasts) === */
+(function(){
+  function normalize(s){ return String(s||'').toLowerCase().replace(/&/g,'and').trim(); }
+  function guessCategoryFrom(result){
+    if(result && result.type==='podcast') return 'podcast';
+    var cats = (result && result.categories || []).map(normalize);
+    var map = {
+      'science fiction':'sci-fi','sci fi':'sci-fi','sci-fi':'sci-fi',
+      'young adult':'young adult','ya':'young adult',
+      'mystery':'mystery','detective':'mystery',
+      'thriller':'thriller','suspense':'thriller',
+      'romance':'romance','fantasy':'fantasy','horror':'horror',
+      'history':'history','memoir':'memoir','biography':'biography',
+      'business and economics':'business','business':'business',
+      'self-help':'self-help','self help':'self-help',
+      'psychology':'psychology','philosophy':'philosophy',
+      'religion':'spirituality/religion','spirituality':'spirituality/religion',
+      'health and fitness':'health & fitness','health':'health & fitness','fitness':'health & fitness',
+      'technology':'technology','poetry':'poetry',
+      'graphic novels':'comics/graphic novel','comics & graphic novels':'comics/graphic novel','comics':'comics/graphic novel',
+      'dystopian':'dystopian','literary':'literary fiction','classics':'classics'
+    };
+    for(var i=0;i<cats.length;i++){
+      var raw=cats[i];
+      if(map[raw]) return map[raw];
+      if(/sci[-\s]?fi|science\s*fiction/.test(raw)) return 'sci-fi';
+      if(/young\s*adult|^\s*ya\s*$/.test(raw)) return 'young adult';
+      if(/mystery|detective|crime/.test(raw)) return 'mystery';
+      if(/thriller|suspense/.test(raw)) return 'thriller';
+      if(/fantasy/.test(raw)) return 'fantasy';
+      if(/romance/.test(raw)) return 'romance';
+      if(/horror/.test(raw)) return 'horror';
+      if(/memoir|autobiograph/.test(raw)) return 'memoir';
+      if(/biograph/.test(raw)) return 'biography';
+      if(/business|economics|finance|management|startup/.test(raw)) return 'business';
+      if(/self[-\s]?help|productivity|habits/.test(raw)) return 'self-help';
+      if(/psychology|behavior|cognitive/.test(raw)) return 'psychology';
+      if(/philosophy|ethic|stoic/.test(raw)) return 'philosophy';
+      if(/relig|christian|faith|spirit/.test(raw)) return 'spirituality/religion';
+      if(/health|fitness|wellness|sleep|stress/.test(raw)) return 'health & fitness';
+      if(/technology|computer|programming|software/.test(raw)) return 'technology';
+      if(/poetry/.test(raw)) return 'poetry';
+      if(/dystop/.test(raw)) return 'dystopian';
+      if(/literary/.test(raw)) return 'literary fiction';
+    }
+    var s=normalize((result && result.description) || '');
+    if(/sci[-\s]?fi|science\s*fiction/.test(s)) return 'sci-fi';
+    if(/mystery|detective|crime/.test(s)) return 'mystery';
+    if(/fantasy/.test(s)) return 'fantasy';
+    if(/romance/.test(s)) return 'romance';
+    if(/thriller|suspense/.test(s)) return 'thriller';
+    return 'other';
+  }
+  function setGenre(value){
+    var sel=document.getElementById('genre'); if(!sel) return;
+    var want=String(value||'').toLowerCase();
+    var ok = Array.prototype.some.call(sel.options, function(o){ return o.value===want; });
+    sel.value = ok ? want : 'other';
+  }
+
+  /* Run BEFORE your original click handler (capture phase) */
+  document.addEventListener('click', function(e){
+    var pick = e.target.closest && e.target.closest('[data-pick]');
+    if(!pick) return;
+    var i = Number(pick.getAttribute('data-pick'));
+    if(isNaN(i) || !Array.isArray(window.lastSearchItems)) return;
+    var item = window.lastSearchItems[i]; if(!item) return;
+
+    // Ensure media type matches the pick
+    var mt = document.getElementById('media-type');
+    if(mt){ mt.value = (item.type==='podcast' ? 'podcast' : 'book'); }
+
+    // Auto-set Category
+    setGenre(guessCategoryFrom(item));
+  }, true); // capture=true so this fires first
+
+  // If user flips to Podcast manually, keep Category in sync
+  var mtSel = document.getElementById('media-type');
+  if(mtSel){
+    mtSel.addEventListener('change', function(){
+      if(this.value==='podcast'){ setGenre('podcast'); }
+    });
+  }
+})();
+</script>
+
+</script>
 </script>
 </body>
 </html>
+
 
