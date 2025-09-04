@@ -1,125 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<style id="plotlines-theme">
-/* ===== Plotlines look: neutral slate + crisp cards ===== */
-:root{
-  /* keep your variables but neutralize the palette */
-  --pine:#4f46e5;           /* indigo for accents (no green) */
-  --spruce:#0f172a;         /* slate-900 */
-  --sage:#e5e7eb;           /* gray-200 */
-  --silver:#cbd5e1;         /* slate-300 */
-  --mist:#f8fafc;           /* slate-50 */
-  --accent:#4f46e5;         /* indigo-600 */
-  --ink:#111827;            /* gray-900 */
-  --muted:#6b7280;          /* gray-500 */
-  --line:#e5e7eb;           /* gray-200 */
-  --gold:#f59e0b;           /* amber-500 */
-  --shadow:0 10px 24px rgba(15,23,42,.08);
-}
-
-/* kill the green gradient */
-body{ background:var(--mist) !important; color:var(--ink) }
-
-/* header subtitle = clear scope pill */
-.header p#scope-subtitle{
-  display:inline-flex; align-items:center; gap:8px;
-  background:#fff; border:1px solid var(--line); border-radius:999px;
-  padding:4px 10px; font-weight:800; color:#1f2937;
-}
-html[data-scope="main"]  .header p#scope-subtitle{ background:#eef2ff; border-color:#c7d2fe; color:#3730a3 }
-html[data-scope="wellness"] .header p#scope-subtitle{ background:#ecfeff; border-color:#a5f3fc; color:#0c4a6e }
-
-/* make scope tabs clean */
-.scope-nav .nav-btn{
-  background:#ffffff !important; color:#1f2937 !important; border:1px solid var(--line) !important;
-  border-radius:10px; font-weight:900;
-}
-.scope-nav .nav-btn.active{
-  background:#eef2ff !important; border-color:#c7d2fe !important; color:#3730a3 !important;
-}
-
-/* hide Preferences tab in the main nav */
-#prefs-btn{ display:none !important; }
-
-/* ===== FEED → true card grid like Plotlines ===== */
-.feed{
-  display:grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(320px,1fr)) !important;
-  gap:16px !important;
-}
-
-/* Card */
-.post{
-  border:1px solid var(--line) !important;
-  border-left:none !important;
-  border-radius:16px !important;
-  background:#fff !important;
-  box-shadow:var(--shadow) !important;
-  padding:14px !important;
-}
-
-/* Card header → cover left, text right (compact, tidy) */
-.post .head{
-  display:grid !important;
-  grid-template-columns: 92px 1fr !important;
-  align-items:flex-start !important;
-  gap:12px !important;
-}
-.cover, .cover-ph{
-  width:92px !important; height:138px !important; border-radius:10px !important;
-  border:1px solid var(--line) !important;
-}
-
-/* Metadata styles (Plotlines-like typography) */
-.genre{
-  background:#eef2ff !important; color:#312e81 !important; border:1px solid #c7d2fe !important;
-  font-weight:900 !important; border-radius:10px !important;
-}
-.title{ font-size:1.05rem !important; font-weight:900 !important; color:#0f172a !important; }
-.author{ color:#475569 !important; font-style:normal !important; }
-.recommender{ color:#111827 !important; font-weight:800 !important; }
-.small{ color:#64748b !important; }
-
-/* rating stars line */
-.stars .star, .stars{ color:var(--gold) !important; }
-.rating-line .small{ color:#475569 !important; }
-
-/* tags + chips */
-.tag{
-  background:#f1f5f9 !important; border:1px solid var(--line) !important; color:#0f172a !important;
-  border-radius:999px !important; font-weight:800 !important;
-}
-
-/* action buttons = minimal pills */
-.actions{ border-top:1px solid var(--line) !important; border-bottom:none !important; }
-.action{
-  background:#ffffff !important; color:#1f2937 !important; border:1px solid var(--line) !important;
-  border-radius:999px !important; font-weight:900 !important;
-}
-.action:hover, .action.active{ background:#eef2ff !important; border-color:#c7d2fe !important; color:#3730a3 !important; }
-
-/* comments surface */
-.c-item{ background:#f8fafc !important; border:1px solid var(--line) !important; }
-
-/* stat chips / leaderboards cleaned up */
-.stat{ background:#fff !important; border:1px solid var(--line) !important; color:#1f2937 !important; box-shadow:var(--shadow) !important; }
-.lb-card{ background:#fff !important; border:1px solid var(--line) !important; box-shadow:var(--shadow) !important; }
-
-/* inputs/buttons (no green) */
-.nav-btn, .pill-btn, .c-btn{
-  background:var(--accent) !important; border:0 !important; color:#fff !important;
-  border-radius:12px !important; font-weight:900 !important;
-}
-.nav-btn.active{ background:#4338ca !important; }
-
-/* collapse comments toggle button */
-.c-toggle{
-  background:#ffffff !important; color:#1f2937 !important; border:1px solid var(--line) !important;
-  border-radius:999px !important; font-weight:800 !important;
-}
-</style>
-
-  <head>
+<head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Book Club</title>
@@ -131,6 +12,57 @@ html[data-scope="wellness"] .header p#scope-subtitle{ background:#ecfeff; border
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link id="app-manifest" rel="manifest">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANgAAADYCAQAAAAzSx0mAAAAC0lEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAB4p1nNAAE="/>
+
+<style id="plotlines-theme">
+/* ===== Plotlines look: neutral slate + crisp cards ===== */
+:root{
+  --pine:#4f46e5; --spruce:#0f172a; --sage:#e5e7eb; --silver:#cbd5e1; --mist:#f8fafc;
+  --accent:#4f46e5; --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --gold:#f59e0b; --shadow:0 10px 24px rgba(15,23,42,.08);
+}
+body{ background:var(--mist); color:var(--ink) }
+.header p#scope-subtitle{
+  display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); border-radius:999px;
+  padding:4px 10px; font-weight:800; color:#1f2937;
+}
+html[data-scope="main"]  .header p#scope-subtitle{ background:#eef2ff; border-color:#c7d2fe; color:#3730a3 }
+html[data-scope="wellness"] .header p#scope-subtitle{ background:#ecfeff; border-color:#a5f3fc; color:#0c4a6e }
+.scope-nav .nav-btn{ background:#ffffff; color:#1f2937; border:1px solid var(--line); border-radius:10px; font-weight:900 }
+.scope-nav .nav-btn.active{ background:#eef2ff; border-color:#c7d2fe; color:#3730a3 }
+#prefs-btn{ display:none }
+.feed{ display:grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap:16px }
+.post{
+  border:1px solid var(--line); border-left:none; border-radius:16px; background:#fff; box-shadow:var(--shadow); padding:14px;
+}
+.post .head{ display:grid; grid-template-columns: 92px 1fr; align-items:flex-start; gap:12px }
+.cover, .cover-ph{ width:92px; height:138px; border-radius:10px; border:1px solid var(--line) }
+.genre{
+  background:#eef2ff; color:#312e81; border:1px solid #c7d2fe; font-weight:900; border-radius:10px; display:inline-block; padding:2px 8px; margin-bottom:6px
+}
+.title{ font-size:1.05rem; font-weight:900; color:#0f172a }
+.author{ color:#475569; font-style:normal }
+.recommender{ color:#111827; font-weight:800 }
+.small{ color:#64748b }
+.stars .star, .stars{ color:var(--gold) }
+.rating-line .small{ color:#475569 }
+.tag{
+  background:#f1f5f9; border:1px solid var(--line); color:#0f172a; border-radius:999px; font-weight:800; padding:1px 6px; font-size:11px
+}
+.actions{ border-top:1px solid var(--line) }
+.action{
+  background:#ffffff; color:#1f2937; border:1px solid var(--line); border-radius:999px; font-weight:900; padding:6px 10px; margin:6px 6px 0 0; cursor:pointer
+}
+.action:hover, .action.active{ background:#eef2ff; border-color:#c7d2fe; color:#3730a3 }
+.c-item{ background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:8px }
+.stat{ background:#fff; border:1px solid var(--line); color:#1f2937; box-shadow:var(--shadow); border-radius:12px; padding:8px 10px; display:flex; gap:8px; align-items:center; cursor:pointer }
+.lb-card{ background:#fff; border:1px solid var(--line); box-shadow:var(--shadow); border-radius:12px; padding:10px }
+.nav-btn, .pill-btn, .c-btn{
+  background:var(--accent); border:0; color:#fff; border-radius:12px; font-weight:900; padding:8px 14px; cursor:pointer
+}
+.nav-btn.active{ background:#4338ca }
+.c-toggle{
+  background:#ffffff; color:#1f2937; border:1px solid var(--line); border-radius:999px; font-weight:800; padding:4px 10px; cursor:pointer
+}
+</style>
 
 <style>
 :root{
@@ -152,28 +84,20 @@ body{
 .user-bar{display:none;justify-content:space-between;align-items:center;background:var(--glass);padding:6px 12px;border-radius:14px;color:#fff;margin:10px 0;backdrop-filter:blur(10px);border:1px solid var(--glass-2)}
 .toolbar{display:flex;gap:6px}
 .pill-btn{ background:var(--pine); border:2px solid #0d1b16; color:#fff; padding:6px 12px; border-radius:999px; cursor:pointer;font-size:12px;font-weight:700 }
-.pill-btn:hover{filter:brightness(1.08)}
-.pill-btn:focus-visible{outline:3px solid #ffe08a;outline-offset:2px}
 .status-chip{margin-left:8px;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.6);opacity:.9}
 
 .top-row{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin:8px 0 14px}
 .stats{display:flex;gap:8px;flex-wrap:wrap}
-.stat{background:var(--glass);padding:8px 10px;border-radius:12px;color:#fff;border:1px solid var(--glass-2);backdrop-filter:blur(12px);font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
-.stat strong{font-size:18px;line-height:1}
 .users-pop{position:absolute;background:#fff;border:1px solid #e6ece8;border-radius:8px;box-shadow:0 10px 22px rgba(0,0,0,.12);padding:8px 10px;display:none;z-index:40}
 
 .leaderboard{background:#faf9f6;border-radius:12px;padding:10px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border:1px solid var(--line)}
-.lb-card{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#f7f9f8}
-.lb-card h3{font-size:14px;color:#1b2a23;margin-bottom:6px}
 .lb-list{display:grid;gap:6px}
 .lb-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#20362c}
-.lb-count{background:#e8efe9;border:1px solid #b9c9bf;color:#1b2a23;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
 
-.content{background:#fbfbf7;border-radius:14px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.content{background:#fbfbf7;border-radius:14px;padding:16px;box-shadow:0 8px 16px rgba(0,0,0,.06);border:1px solid var(--line)}
 .prelogin-row{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .activity{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:0;background:#f9fbfa}
 .activity-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.activity-head h3{font-size:14px;color:#1b2a23}
 .activity-body{max-height:180px;overflow:auto}
 .activity.compact .activity-body{max-height:120px}
 .a-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #edf3ef;font-size:13px;color:#233a33}
@@ -182,13 +106,9 @@ body{
 .a-meta{font-size:11px;color:#6b7771;margin-top:2px}
 .pill{border:1px solid #b9c9bf;background:#f1f6f3;color:#1b2a23;padding:0 6px;border-radius:999px;font-size:11px;margin-left:6px}
 
-/* navs */
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .nav-btn{ background:var(--pine); color:#fff; border:2px solid #0d1b16; padding:8px 14px;border-radius:22px;cursor:pointer;transition:.2s;font-size:13px;font-weight:800 }
-.nav-btn:hover,.nav-btn.active{filter:brightness(1.1)}
-.nav-btn:focus-visible{outline:3px solid #ffe08a;outline-offset:2px}
 
-/* scope nav */
 .scope-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px}
 .scope-nav .nav-btn{background:#143127}
 .scope-nav .nav-btn.active{filter:brightness(1.15)}
@@ -198,46 +118,38 @@ body{
 
 .section{display:none}.section.active{display:block}
 .feed{display:flex;flex-direction:column;gap:12px}
-.post{border:1px solid var(--line);border-left:6px solid #1b3a30;border-radius:12px;padding:14px;box-shadow:0 8px 16px rgba(0,0,0,.06);background:#fffefb}
+.post{border:1px solid var(--line);border-left:6px solid #1b3a30;border-radius:12px;padding:14px;background:#fffefb}
 .head{display:flex;gap:12px;align-items:flex-start}
 .cover{width:78px;height:116px;object-fit:cover;border-radius:8px;border:1px solid #e6ece8;flex-shrink:0}
 .cover-ph{width:78px;height:116px;background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#2d3436;flex-shrink:0}
 
 .info{flex:1}
-.genre{background:var(--pine);color:#fff;padding:2px 8px;border-radius:14px;font-size:11px;font-weight:800;display:inline-block;margin-bottom:6px;border:2px solid #0d1b16}
-.title{font-size:1.12rem;font-weight:900;color:var(--ink);line-height:1.2}
-.author{color:#2a3a33;font-style:italic;margin:2px 0 4px;font-size:13px}
-.recommender{font-size:.95rem;color:#234338;font-weight:800;margin-bottom:4px}
-.rating-line{display:flex;align-items:center;gap:8px;font-size:12px;margin:2px 0 6px;color:#2a3a33}
+.title{line-height:1.2}
+.author{font-style:italic;margin:2px 0 4px;font-size:13px}
+.recommender{font-size:.95rem;font-weight:800;margin-bottom:4px}
+.rating-line{display:flex;align-items:center;gap:8px;font-size:12px;margin:2px 0 6px}
 .stars{display:flex;gap:2px}
 .star{font-size:16px;color:#d0d5cf;background:none;border:none;cursor:pointer;padding:0 2px}
 .star.filled{color:var(--gold)}
 .tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{background:#eef4ef;border:1px solid #b9c9bf;color:#1b2a23;padding:1px 6px;border-radius:999px;font-size:11px;font-weight:700}
 
-/* PlotLines bits */
 .series-chip{display:inline-block;margin-left:6px;background:#143127;color:#fff;border:2px solid #0d1b16;padding:2px 8px;border-radius:14px;font-size:11px;font-weight:900}
 .status-pill{display:inline-flex;align-items:center;gap:6px;background:#e8efe9;border:1px solid #b9c9bf;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;color:#1b2a23;margin:4px 0}
 .timeline{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:#355046;margin:4px 0 6px}
 .timeline .tl{background:#f3f7f4;border:1px solid #d2ded5;border-radius:999px;padding:2px 8px}
 
-/* rec strip + coming soon */
 .recs{display:none;margin:4px 0 10px}
 .recs.show{display:block}
 .recs-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
 .rec-card{border:1px solid var(--line);background:#fffefb;border-radius:10px;padding:8px;box-shadow:0 4px 10px rgba(0,0,0,.05)}
 .rec-title{font-size:12px;font-weight:800;color:#1e2f27;line-height:1.2;margin-top:4px}
 .rec-btn{ margin-top:6px; width:100%; background:#1f3b31; color:#fff; border:2px solid #0d1b16; padding:6px 8px; border-radius:10px; font-size:12px; font-weight:800; cursor:pointer }
-#coming-soon-box{display:none;margin-bottom:10px}
 
-/* comments */
 .comments{margin-top:6px}
 .c-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .c-title{font-weight:900;color:#27443a;font-size:13px}
-.c-toggle{background:#fff;border:2px solid var(--pine);border-radius:999px;font-size:11px;padding:4px 10px;cursor:pointer;color:#pine;font-weight:800}
-.c-toggle:hover{background:var(--pine);color:#fff}
+.c-toggle{background:#fff;border:2px solid var(--pine);border-radius:999px;font-size:11px;padding:4px 10px;cursor:pointer;font-weight:800}
 .c-list{display:grid;gap:6px;max-height:260px;overflow:auto}
-.c-item{background:#f5f8f6;border:1px solid #dbe5de;border-radius:8px;padding:8px}
 .c-headline{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:13px}
 .c-name{font-weight:900;color:#27443a}
 .c-like{background:none;border:none;color:#355e4e;font-size:12px;cursor:pointer;font-weight:800}
@@ -245,33 +157,30 @@ body{
 .c-text{color:#2a3a33;font-size:13px}
 .c-form{display:grid;grid-template-columns:140px 1fr 120px;gap:6px;margin-top:6px}
 .c-input,.c-textarea{padding:8px;border:2px solid var(--line);border-radius:8px;font-size:13px;background:#fffefb}
-.c-btn{background:var(--pine);color:#fff;border:2px solid #0d1b16;border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:900}
 
 .login{padding:40px 12px;text-align:center}
 .login-card{background:#faf9f6;padding:28px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.12);max-width:420px;margin:0 auto;border:1px solid var(--line)}
-.input,.select,.textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;font-size:15px;transition:.2s border-color;color:var(--ink);background:#fffefb}
+.input,.select,.textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:8px;font-size:15px;transition:.2s;border-color:var(--line);color:var(--ink);background:#fffefb}
 .textarea{resize:vertical;min-height:90px}
 .input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--pine)}
 .select{background:#fffefb}
-.small{font-size:12px;color:#2b3832}
+.small{font-size:12px}
 
 .toast{position:fixed;bottom:18px;right:18px;background:#1d1f1e;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:9999;max-width:70ch;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:#b74a4a}
-
-.loading{opacity:.6;pointer-events:none}
-
-#finish-modal{ right:auto; left:50%; pointer-events:auto; }
-#finish-modal.show{ transform:translate(-50%,0); }
-#finish-modal .small{ color:#e8ecef; }
-#finish-modal { pointer-events: auto; }
-#finish-modal.show { transform: translate(-50%, 0); }
 
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid #ddd;border-radius:50%;border-top-color:#666;animation:spin .8s linear infinite;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .results-bar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 8px;gap:8px;flex-wrap:nowrap}
 .results-right{display:flex;gap:6px;align-items:center;white-space:nowrap}
+
+#finish-modal{ right:auto; left:50%; pointer-events:auto; }
+#finish-modal.show{ transform:translate(-50%,0); }
+#finish-modal .small{ color:#e8ecef; }
+#finish-modal { pointer-events: auto; }
+#finish-modal.show { transform: translate(-50%, 0); }
 
 @media(max-width:840px){
   .top-row{grid-template-columns:1fr}
@@ -398,7 +307,7 @@ body{
       <!-- FEED -->
       <section id="feed" class="section active">
 
-        <!-- Recommended strip (PlotLines) -->
+        <!-- Recommended strip -->
         <div id="recs" class="recs">
           <div style="display:flex;align-items:center;justify-content:space-between;margin:2px 0 6px">
             <h3 style="font-size:14px;color:#1b2a23">Recommended For You</h3>
@@ -437,8 +346,8 @@ body{
           </div>
         </div>
 
-        <!-- Coming Soon (PlotLines) -->
-        <div id="coming-soon-box" class="lb-card">
+        <!-- Coming Soon -->
+        <div id="coming-soon-box" class="lb-card" style="display:none">
           <h3>Coming Soon</h3>
           <div id="coming-soon-list" class="lb-list"></div>
         </div>
@@ -451,7 +360,6 @@ body{
         <div class="lb-card" style="margin-bottom:10px">
           <h3>Share a Recommendation</h3>
 
-          <!-- media type + unified search -->
           <div class="search" style="grid-template-columns:1fr 1fr 1fr">
             <div>
               <label class="small">Type</label>
@@ -490,7 +398,6 @@ body{
               </div>
             </div>
 
-            <!-- PlotLines: Series meta -->
             <div class="search" style="grid-template-columns:1fr 1fr 1fr">
               <div><label class="small">Series</label><input class="input" type="text" id="series-name" placeholder="Series name"/></div>
               <div><label class="small">Series #</label><input class="input" type="number" id="series-number" min="0" step="1" placeholder="e.g. 1"/></div>
@@ -505,7 +412,7 @@ body{
             <div><label class="small">Synopsis</label><textarea class="textarea" id="synopsis" placeholder="Description…"></textarea></div>
 
             <div>
-              <label class="small">Why I recommend this * <span class="small" style="opacity:.8">(Choose a style below and click “Suggest Reason” to auto-generate text, then edit)</span></label>
+              <label class="small">Why I recommend this * <span class="small" style="opacity:.8">(Use “Suggest Reason” to auto-generate then edit)</span></label>
               <div class="search" style="grid-template-columns:1fr auto">
                 <select id="reason-tone" class="select" aria-label="Style for auto-generate">
                   <option value="personal">Style: Personal</option>
@@ -564,7 +471,6 @@ body{
           </div>
         </div>
 
-        <!-- PlotLines: Cloud Sync -->
         <div class="lb-card" style="margin-bottom:10px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <h3>Cloud Sync (JSONBin)</h3>
@@ -583,7 +489,6 @@ body{
           </div>
         </div>
 
-        <!-- PlotLines: Watched Series -->
         <div class="lb-card" style="margin-bottom:10px">
           <h3>Watched Series</h3>
           <div id="watched-series-list" class="lb-list"></div>
@@ -591,7 +496,6 @@ body{
 
         <div class="lb-card" style="margin-bottom:10px">
           <h3>Install on Your Phone</h3>
-          <p class="small">Add Book Club to your home screen so it opens like an app.</p>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <button id="install-app-btn" class="nav-btn" type="button">Install App</button>
             <span id="install-status" class="chip">Not installed</span>
@@ -603,7 +507,6 @@ body{
               <li>Tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.</li>
               <li>Tap <strong>Add</strong>.</li>
             </ol>
-            <p class="small">On iOS Chrome: Share → “Add to Home Screen”.</p>
           </details>
         </div>
 
@@ -619,7 +522,6 @@ body{
 
         <div class="lb-card" style="margin-bottom:10px">
           <h3>Export / Backup</h3>
-          <p class="small">Downloads Excel-friendly CSV + JSON (includes Wellness flag).</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="export-csv-btn" class="nav-btn" type="button">Download CSVs</button>
             <button id="export-json-btn" class="nav-btn" type="button">Download JSON</button>
@@ -627,7 +529,6 @@ body{
           </div>
         </div>
 
-        <!-- Keep your original Admin Options BUT add a link to separate admin page -->
         <div class="lb-card">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <h3>Admin Options</h3>
@@ -665,7 +566,7 @@ body{
   </main>
 </div>
 
-<!-- Separate Admin Page (not a main tab) -->
+<!-- Separate Admin Page -->
 <section id="admin-page" class="section" style="display:none;max-width:1100px;margin:12px auto">
   <div class="content">
     <div class="lb-card" style="margin-bottom:10px">
@@ -730,19 +631,18 @@ function escapeHtml(s){ s=String(s==null?'':s); s=rAll(s,'&','&amp;'); s=rAll(s,
 function escapeAttr(s){ return rAll(escapeHtml(s),'"','&quot;'); }
 
 /* ========= JSONBin Storage & State ========= */
-/* Default (baked-in). Cloud Sync in Prefs can override these at runtime. */
 const JSONBIN_API = 'https://api.jsonbin.io/v3';
 const DEFAULT_BIN_ID = '68b8be9e43b1c97be935f1da';
 const DEFAULT_API_KEY = '$2a$10$1k.Aw1WU5YTjSlKmSLGQ3eK6gaEhRB/j.FzTEtMp7Ardqd7vI4i4C';
 const ADMIN_PASSWORD = 'Prob1234';
 
 let currentUser='';
-let books=[];                 // Fun books (primary)
-let wellnessBooks=[];         // Wellness items
-let comingSoon=[];            // upcoming from watched series (fun)
-let wellnessComingSoon=[];    // upcoming from watched series (wellness)
+let books=[];                 // Main
+let wellnessBooks=[];         // Wellness
+let comingSoon=[];            // main upcoming
+let wellnessComingSoon=[];    // wellness upcoming
 let userData={};
-let activity=[];              // Fun activity
+let activity=[];              // Main activity
 let wellnessActivity=[];      // Wellness activity
 let sitePrefs={teamsWebhook:'',postNew:true,postFinish:true,postFive:true,openaiKey:'',
                cloudApiKey:'',cloudBinId:'', watchedSeries:[]};
@@ -755,12 +655,12 @@ let activityExpanded=false;
 let lastSearchItems=[];
 let deferredPrompt=null;
 
-/* Scope handling */
-let currentScope='main'; // 'main' or 'wellness'
+/* Scope helpers */
+let currentScope='main';
 function BOOKS(){ return currentScope==='main' ? books : wellnessBooks; }
 function ACTIV(){ return currentScope==='main' ? activity : wellnessActivity; }
 function UPCOMING(){ return currentScope==='main' ? comingSoon : wellnessComingSoon; }
-function OTHER_BOOKS(){ return currentScope==='main' ? wellnessBooks : books; } // used by cross-lookup
+function OTHER_BOOKS(){ return currentScope==='main' ? wellnessBooks : books; }
 
 /* ========= Utilities ========= */
 var $ = function(sel, root){ return (root||document).querySelector(sel); };
@@ -830,8 +730,7 @@ async function loadAll(){
     if(cached.comingSoon) comingSoon=cached.comingSoon;
     if(cached.wellnessComingSoon) wellnessComingSoon=cached.wellnessComingSoon;
   }catch(_e){}
-
-  try{ // remote (effective bin / key)
+  try{ // remote pull
     const r = await fetch(JSONBIN_API+'/b/'+effectiveBin()+'/latest',{headers:{'X-Master-Key':effectiveApiKey()}});
     if(!r.ok) throw new Error(await r.text());
     const data=await r.json();
@@ -845,9 +744,7 @@ async function loadAll(){
     wellnessComingSoon=record.wellnessComingSoon||wellnessComingSoon||[];
     for(var k2 in (record.sitePrefs||{})){ sitePrefs[k2]=record.sitePrefs[k2]; }
     localStorage.setItem('bookclub_payload', JSON.stringify({books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon}));
-  }catch(e){
-    console.warn('Using local data; sync failed.', e);
-  }
+  }catch(e){ console.warn('Using local data; sync failed.', e); }
   isLoading=false;
 }
 async function saveAll(pushToCloud){
@@ -906,7 +803,7 @@ function mergeOrPostActivity(entry){
     arr.unshift({type:entry.type,payload:entry.payload,id:Date.now()+Math.random(),likes:0,likedBy:[],at:now()});
     if(arr.length>300) arr.length=300;
   }
-  renderActivity(); saveAll();
+  renderActivity(); saveAll(false);
 }
 function postActivity(type,payload){ mergeOrPostActivity({type:type,payload:payload}); }
 function activityIcon(type){ var map={share:'📣',finish:'🏁','five':'🏆','list':'🗂️','like':'👍',comment:'💬',multi:'✨'}; return map[type]||'📝'; }
@@ -983,11 +880,11 @@ function autoTagsFrom(book){
 /* ========= PlotLines: Series Helpers ========= */
 function watchSeriesName(name){
   name=String(name||'').trim(); if(!name) return;
-  if(sitePrefs.watchedSeries.indexOf(name)===-1){ sitePrefs.watchedSeries.push(name); saveAll(); renderWatchedSeries(); showToast('Watching series: '+name); }
+  if(sitePrefs.watchedSeries.indexOf(name)===-1){ sitePrefs.watchedSeries.push(name); saveAll(false); renderWatchedSeries(); showToast('Watching series: '+name); }
 }
 function unwatchSeriesName(name){
   sitePrefs.watchedSeries = sitePrefs.watchedSeries.filter(function(x){ return x!==name; });
-  saveAll(); renderWatchedSeries(); showToast('Removed: '+name);
+  saveAll(false); renderWatchedSeries(); showToast('Removed: '+name);
 }
 function renderWatchedSeries(){
   var list=$('#watched-series-list');
@@ -1168,11 +1065,8 @@ function renderActivity(){
 
 let currentBooks=[]; // rendered list for current scope
 function renderBooks(){
-  // coming soon
   renderComingSoon();
-  // recs
   computeAndRenderRecs();
-
   var c=$('#books-feed');
   if(!currentBooks.length){
     c.innerHTML='<div style="text-align:center;padding:28px;color:var(--muted)"><h3 style="font-size:1rem;color:#2a3a33">No items found</h3><p class="small">Adjust search/filters or add a new recommendation.</p></div>';
@@ -1428,7 +1322,7 @@ function importJson(file){
       if(data.sitePrefs) for(var k in data.sitePrefs){ sitePrefs[k]=data.sitePrefs[k]; }
       if(data.comingSoon) comingSoon=data.comingSoon;
       if(data.wellnessComingSoon) wellnessComingSoon=data.wellnessComingSoon;
-      saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('Import complete');
+      saveAll(false); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('Import complete');
     }catch(e){ showToast('Invalid JSON',true); }
   };
   fr.readAsText(file);
@@ -1442,6 +1336,7 @@ function openFinishModal(book){
   currentRating = (urObj?urObj.rating:undefined);
   if(currentRating==null) currentRating = (mineEntry && mineEntry._rating) || 0;
   $('#finish-title').textContent = book.title+' — '+book.author;
+  $('#finish-heading').textContent = mineEntry ? 'Update your rating' : 'Rate this item';
   $$('#finish-stars .star').forEach(function(star){ var val=Number(star.getAttribute('data-rating')); star.classList.toggle('filled', val<=currentRating); });
   $('#finish-modal').classList.add('show');
 }
@@ -1467,7 +1362,7 @@ async function suggestReason(tone){
   var fallback = localReason({title:title,author:author,genre:genre,synopsis:synopsis,tone:tone,tags:tags});
   var key=(sitePrefs.openaiKey||'').trim(); if(!key) return fallback;
   try{
-    const prompt='Write a '+tone+' 2-3 sentence recommendation for "'+title+'" by '+author+'. Category '+genre+'. Tags: '+(tags||'—')+'. Use ~80 words. No spoilers. Avoid slang.';
+    const prompt='Write a '+tone+' 2-3 sentence recommendation for "'+title+'" by '+author+'. Category '+genre+'. Tags: '+(tags||'—')+'. Use ~80 words. No spoilers.';
     const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:prompt}],temperature:0.7,max_tokens:180})});
     if(!r.ok) throw new Error(await r.text());
     const j=await r.json();
@@ -1665,7 +1560,7 @@ document.addEventListener('DOMContentLoaded', async function(){
     });
   })();
 
-  // rating stars
+  // rating stars (add form)
   $$('#rating-stars .star').forEach(function(star){
     star.addEventListener('click', function(){
       var val=Number(star.getAttribute('data-rating'));
@@ -1674,6 +1569,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       $('#rating-feedback').textContent='You selected '+val+' star'+(val===1?'':'s')+'.';
     });
   });
+  // rating stars (modal)
   $$('#finish-stars .star').forEach(function(star){
     star.addEventListener('click', function(){
       var val=Number(star.getAttribute('data-rating'));
@@ -1739,13 +1635,10 @@ document.addEventListener('DOMContentLoaded', async function(){
       if(!book.genre || book.genre==='other') book.genre = 'podcast';
       if(book.tags.indexOf('podcast')===-1) book.tags.unshift('podcast');
     }
-    // add to current scope store
     BOOKS().unshift(book);
 
-    // watch series if checked
     if($('#watch-series').checked && seriesName){ watchSeriesName(seriesName); }
 
-    // also add to recommender's READ list with rating (like original behavior), tagging wellness flag
     ensureUser(recommender);
     var recMe=userData[recommender];
     var nowTs=Date.now();
@@ -1768,9 +1661,9 @@ document.addEventListener('DOMContentLoaded', async function(){
     sitePrefs.postNew=$('#pref-post-new').checked;
     sitePrefs.postFinish=$('#pref-post-finish').checked;
     sitePrefs.postFive=$('#pref-post-5').checked;
-    saveAll(); showToast('Preferences saved.');
+    saveAll(false); showToast('Preferences saved.');
   });
-  $('#save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#pref-teams-url').value.trim(); saveAll(); showToast('Teams URL saved'); });
+  $('#save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#pref-teams-url').value.trim(); saveAll(false); showToast('Teams URL saved'); });
   $('#export-csv-btn').addEventListener('click', exportCsvs);
   $('#export-json-btn').addEventListener('click', exportJson);
   $('#import-json').addEventListener('change', function(e){ var f=e.target.files && e.target.files[0]; if(f) importJson(f); e.target.value=''; });
@@ -1828,12 +1721,12 @@ document.addEventListener('DOMContentLoaded', async function(){
   });
   $('#cloud-push').addEventListener('click', async function(){ await saveAll(true); showToast('Pushed to cloud'); });
 
-  // Admin (duplicate controls on separate Admin page)
+  // Admin helpers
   function guard(){ var pw=prompt('Admin password:'); if(pw!==ADMIN_PASSWORD){ showToast('Incorrect password',true); return false; } return true; }
   function doClear(){ if(!confirm('This will erase ALL data. Continue?'))return;
     books=[]; wellnessBooks=[]; userData={}; activity=[]; wellnessActivity=[]; comingSoon=[]; wellnessComingSoon=[];
     sitePrefs={teamsWebhook:'',postNew:true,postFinish:true,postFive:true,openaiKey:sitePrefs.openaiKey||'',cloudApiKey:sitePrefs.cloudApiKey||'',cloudBinId:sitePrefs.cloudBinId||'',watchedSeries:sitePrefs.watchedSeries||[]};
-    saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('All data cleared.');
+    saveAll(false); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('All data cleared.');
   }
   $('#clear-data-btn').addEventListener('click', function(){ if(guard()) doClear(); });
   $('#rename-user-btn').addEventListener('click', function(){
@@ -1847,7 +1740,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       b.forEach(function(x){ if(!ids[x.id]) a.push(x); });
     });
     delete userData[from];
-    saveAll(); updateStats(); showToast('User renamed/merged');
+    saveAll(false); updateStats(); showToast('User renamed/merged');
   });
   $('#delete-book-btn').addEventListener('click', function(){
     if(!guard()) return;
@@ -1861,7 +1754,7 @@ document.addEventListener('DOMContentLoaded', async function(){
       ['readList','wishList','currentReading'].forEach(function(key){ u[key]=u[key].filter(function(x){return x.id!==id;}); });
     });
     if((books.length+wellnessBooks.length)===before){ showToast('No item with that ID found',true); return; }
-    saveAll(); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
+    saveAll(false); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
   });
   $('#purge-activity-btn').addEventListener('click', function(){
     if(!guard()) return;
@@ -1870,12 +1763,12 @@ document.addEventListener('DOMContentLoaded', async function(){
     var arr=ACTIV(); var before=arr.length;
     var keep=arr.filter(function(a){ return new Date(a.at).getTime() >= cutoff; });
     if(currentScope==='main') activity=keep; else wellnessActivity=keep;
-    saveAll(); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
+    saveAll(false); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
   });
   $('#delete-last-activity-btn').addEventListener('click', function(){
     if(!guard()) return;
     var arr=ACTIV();
-    if(arr.length){ arr.shift(); saveAll(); renderActivity(); showToast('Most recent activity deleted.'); }
+    if(arr.length){ arr.shift(); saveAll(false); renderActivity(); showToast('Most recent activity deleted.'); }
     else { showToast('No activity to delete'); }
   });
 
@@ -1893,7 +1786,7 @@ document.addEventListener('DOMContentLoaded', async function(){
         b.forEach(function(x){ if(!ids[x.id]) a.push(x); });
       });
       delete userData[from];
-      saveAll(); updateStats(); showToast('User renamed/merged');
+      saveAll(false); updateStats(); showToast('User renamed/merged');
     });
     $('#a-delete-book-btn').addEventListener('click', function(){
       if(!guard()) return;
@@ -1907,7 +1800,7 @@ document.addEventListener('DOMContentLoaded', async function(){
         ['readList','wishList','currentReading'].forEach(function(key){ u[key]=u[key].filter(function(x){return x.id!==id;}); });
       });
       if((books.length+wellnessBooks.length)===before){ showToast('No item with that ID found',true); return; }
-      saveAll(); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
+      saveAll(false); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
     });
     $('#a-purge-activity-btn').addEventListener('click', function(){
       if(!guard()) return;
@@ -1916,15 +1809,15 @@ document.addEventListener('DOMContentLoaded', async function(){
       var arr=ACTIV(); var before=arr.length;
       var keep=arr.filter(function(a){ return new Date(a.at).getTime() >= cutoff; });
       if(currentScope==='main') activity=keep; else wellnessActivity=keep;
-      saveAll(); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
+      saveAll(false); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
     });
     $('#a-delete-last-activity-btn').addEventListener('click', function(){
       if(!guard()) return;
       var arr=ACTIV();
-      if(arr.length){ arr.shift(); saveAll(); renderActivity(); showToast('Most recent activity deleted.'); }
+      if(arr.length){ arr.shift(); saveAll(false); renderActivity(); showToast('Most recent activity deleted.'); }
       else { showToast('No activity to delete'); }
     });
-    $('#a-save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#a-pref-teams-url').value.trim(); saveAll(); showToast('Teams URL saved'); });
+    $('#a-save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#a-pref-teams-url').value.trim(); saveAll(false); showToast('Teams URL saved'); });
     $('#admin-back').addEventListener('click', closeAdminPage);
   }
   wireAdminPage();
@@ -1946,8 +1839,8 @@ document.addEventListener('DOMContentLoaded', async function(){
   });
 
   // writing assistant key
-  $('#save-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=$('#openai-key').value.trim(); saveAll(); showToast('API key saved (local only)'); });
-  $('#clear-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=''; $('#openai-key').value=''; saveAll(); showToast('API key cleared'); });
+  $('#save-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=$('#openai-key').value.trim(); saveAll(false); showToast('API key saved (local only)'); });
+  $('#clear-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=''; $('#openai-key').value=''; saveAll(false); showToast('API key cleared'); });
 
   // suggest reason
   $('#reason-suggest').addEventListener('click', async function(){
@@ -1964,7 +1857,7 @@ document.addEventListener('DOMContentLoaded', async function(){
   }
   $('#check-new-btn').addEventListener('click', checkNewReleases);
 
-  // global click handlers (comments, likes, lists, series, etc.)
+  // global click handlers (comments, likes, lists, series, share, similar...)
   document.addEventListener('click',function(e){
     var btn=e.target.closest && e.target.closest('[data-action]');
     var jump=e.target.closest && e.target.closest('[data-jump]');
@@ -1973,7 +1866,13 @@ document.addEventListener('DOMContentLoaded', async function(){
       if(el){ openSection('feed'); el.scrollIntoView({behavior:'smooth',block:'start'}); }
       return;
     }
-    if(!btn) return;
+    if(!btn) {
+      // remove watched series via prefs list
+      var unwatch = e.target.closest && e.target.closest('[data-unwatch]');
+      if(unwatch){ unwatchSeriesName(unwatch.getAttribute('data-unwatch')); }
+      return;
+    }
+
     var action=btn.getAttribute('data-action');
     var bookId=btn.getAttribute('data-id');
     var cid=btn.getAttribute('data-cid');
@@ -1991,14 +1890,21 @@ document.addEventListener('DOMContentLoaded', async function(){
       else{ span.textContent = full; span.setAttribute('data-expanded','true'); btn.textContent='Show less'; }
       return;
     }
+
     if(action==='like'){
       if(!currentUser){ showToast('Log in to like.',true); return; }
       var b=findBook(bookId); if(!b) return;
       b.postLikedBy=b.postLikedBy||[];
-      if(b.postLikedBy.indexOf(currentUser)>-1){ b.postLikedBy=b.postLikedBy.filter(function(n){return n!==currentUser;}); b.postLikes=Math.max(0,(b.postLikes||0)-1); }
-      else{ b.postLikedBy.push(currentUser); b.postLikes=(b.postLikes||0)+1; mergeOrPostActivity({type:'like',payload:{user:currentUser,title:b.title}}); }
-      saveAll(); applyFilters(); return;
+      if(b.postLikedBy.indexOf(currentUser)>-1){
+        b.postLikedBy=b.postLikedBy.filter(function(n){return n!==currentUser;});
+        b.postLikes=Math.max(0,(b.postLikes||0)-1);
+      } else {
+        b.postLikedBy.push(currentUser); b.postLikes=(b.postLikes||0)+1;
+        mergeOrPostActivity({type:'like',payload:{user:currentUser,title:b.title}});
+      }
+      saveAll(false); applyFilters(); return;
     }
+
     if(action==='wish'){
       if(!currentUser){ showToast('Log in to add to list.',true); return; }
       var bw=findBook(bookId); if(!bw) return;
@@ -2006,100 +1912,138 @@ document.addEventListener('DOMContentLoaded', async function(){
       if(!mine.wishList.some(function(x){return String(x.id)===String(bw.id);})){
         var nowTs=Date.now();
         mine.wishList.push({id:bw.id,title:bw.title,author:bw.author,_wellness:(bw._scope==='wellness'),_changedAt:nowTs});
+        mine.currentReading = mine.currentReading.filter(function(x){return String(x.id)!==String(bw.id);});
+        mine.readList = mine.readList.filter(function(x){return String(x.id)!==String(bw.id);});
+        postActivity('list',{user:currentUser,action:'added to Want to Read',title:bw.title});
+        showToast('Added to Want to Read');
+      } else {
+        showToast('Already in Want to Read');
       }
-      addActionComment(bw, currentUser+' added to Want to Read', currentUser);
-      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:bw.title,action:'added to Want to Read'}});
-      saveAll(); renderMyLists(); updateStats(); showToast('Added to Want to Read'); return;
+      saveAll(false); renderMyLists(); return;
     }
+
     if(action==='reading'){
       if(!currentUser){ showToast('Log in to add to list.',true); return; }
       var br=findBook(bookId); if(!br) return;
-      ensureUser(currentUser); var meData=me();
-      var nowTs=Date.now();
-      if(!meData.currentReading.some(function(x){return String(x.id)===String(br.id);})){
-        meData.currentReading.push({id:br.id,title:br.title,author:br.author,_wellness:(br._scope==='wellness'),_startedAt:nowTs,_changedAt:nowTs});
-        meData.wishList=meData.wishList.filter(function(x){return String(x.id)!==String(br.id);});
+      ensureUser(currentUser); var mine=me();
+      if(!mine.currentReading.some(function(x){return String(x.id)===String(br.id);})){
+        var nowTs=Date.now();
+        mine.currentReading.push({id:br.id,title:br.title,author:br.author,_wellness:(br._scope==='wellness'),_startedAt:nowTs,_changedAt:nowTs});
+        mine.wishList = mine.wishList.filter(function(x){return String(x.id)!==String(br.id);});
+        mine.readList = mine.readList.filter(function(x){return String(x.id)!==String(br.id);});
+        postActivity('list',{user:currentUser,action:'started reading',title:br.title});
+        showToast('Moved to Currently Reading');
+      } else {
+        showToast('Already in Currently Reading');
       }
-      addActionComment(br, currentUser+' started reading', currentUser);
-      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:br.title,action:'started Currently Reading'}});
-      saveAll(); renderMyLists(); updateStats(); showToast('Moved to Currently Reading');
-      return;
+      saveAll(false); renderMyLists(); return;
     }
+
     if(action==='finish' || action==='rate-again'){
       if(!currentUser){ showToast('Log in to rate.',true); return; }
-      var b0=findBook(bookId); if(!b0) return;
-      openFinishModal(b0);
+      var bf=findBook(bookId); if(!bf) return;
+      openFinishModal(bf); return;
+    }
+
+    if(action==='similar'){
+      var bs=findBook(bookId); if(!bs) return;
+      var t = (bs.tags && bs.tags[0]) || bs.author || bs.title.split(' ')[0];
+      $('#search-input').value = t || '';
+      applyFilters();
+      showToast('Showing items similar to "'+bs.title+'"');
       return;
     }
+
+    if(action==='share'){
+      var bs2=findBook(bookId); if(!bs2) return;
+      var text = bs2.type==='podcast'
+        ? ('🎧 '+bs2.title+' — a podcast recommended by '+bs2.recommender+' ('+averageRatingForBook(bs2).toFixed(1)+'★)')
+        : ('📚 '+bs2.title+' by '+bs2.author+' — recommended by '+bs2.recommender+' ('+averageRatingForBook(bs2).toFixed(1)+'★)');
+      var url = mediaUrl(bs2);
+      if(navigator.share){
+        navigator.share({title:bs2.title,text:text,url:url}).catch(function(){});
+      } else if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text+' '+url).then(function(){ showToast('Copied share text'); }).catch(function(){ showToast('Copy failed',true); });
+      } else {
+        showToast('Share not supported on this browser',true);
+      }
+      return;
+    }
+
+    if(action==='like-comment'){
+      if(!currentUser){ showToast('Log in to like.',true); return; }
+      var bkc=findBook(bookId); if(!bkc) return;
+      var c = (bkc.comments||[]).find(function(x){return String(x.id)===String(cid);}); if(!c) return;
+      c.likedBy=c.likedBy||[];
+      if(c.likedBy.indexOf(currentUser)>-1){ c.likedBy=c.likedBy.filter(function(n){return n!==currentUser;}); c.likes=Math.max(0,(c.likes||0)-1); }
+      else { c.likedBy.push(currentUser); c.likes=(c.likes||0)+1; }
+      saveAll(false); applyFilters(); return;
+    }
+
     if(action==='add-comment'){
       if(!currentUser){ showToast('Log in to comment.',true); return; }
       var bk=findBook(bookId); if(!bk) return;
-      var form=document.querySelector('.c-form[data-id="'+bookId+'"]');
+      var form = document.querySelector('.c-form[data-id="'+bookId+'"]');
       if(!form) return;
-      var name=(form.querySelector('[data-field="name"]').value||currentUser).trim();
-      var text=(form.querySelector('[data-field="text"]').value||'').trim();
-      if(!text){ showToast('Type a comment first.',true); return; }
-      addActionComment(bk, text, name);
-      form.querySelector('[data-field="text"]').value='';
-      mergeOrPostActivity({type:'comment',payload:{user:name,title:bk.title}});
-      saveAll(); applyFilters(); showToast('Comment added');
-      return;
+      var name = (form.querySelector('[data-field="name"]').value || currentUser || 'Anonymous').trim();
+      var text = (form.querySelector('[data-field="text"]').value || '').trim();
+      if(!text){ showToast('Write something first',true); return; }
+      addActionComment(bk, text, name); postActivity('comment',{user:name,title:bk.title});
+      form.querySelector('[data-field="text"]').value=''; saveAll(false); applyFilters(); showToast('Comment added'); return;
     }
-    if(action==='like-comment'){
-      if(!currentUser){ showToast('Log in to like comments.',true); return; }
-      var b1=findBook(bookId); if(!b1) return;
-      var c=(b1.comments||[]).find(function(cc){return String(cc.id)===String(cid);});
-      if(!c) return;
-      c.likedBy=c.likedBy||[];
-      if(c.likedBy.indexOf(currentUser)>-1){ c.likedBy=c.likedBy.filter(function(n){return n!==currentUser;}); c.likes=Math.max(0,(c.likes||0)-1); }
-      else{ c.likedBy.push(currentUser); c.likes=(c.likes||0)+1; }
-      saveAll(); applyFilters(); return;
-    }
-    if(action==='similar'){
-      var b2=findBook(bookId); if(!b2) return;
-      var term=(b2.tags&&b2.tags[0]) || (b2.author||'').split(' ').slice(-1)[0] || b2.genre || '';
-      $('#search-input').value=term||'';
-      applyFilters();
-      showToast('Showing items similar to "'+b2.title+'"');
-      return;
-    }
-    if(action==='share'){
-      var b3=findBook(bookId); if(!b3) return;
-      var link=mediaUrl(b3);
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(link).then(function(){ showToast('Link copied'); }).catch(function(){ window.open(link,'_blank'); showToast('Opened details'); });
-      }else{
-        window.open(link,'_blank'); showToast('Opened details');
-      }
-      return;
-    }
+
     if(action==='watch-series'){
-      var ser=btn.getAttribute('data-ser')||''; if(ser) watchSeriesName(ser);
-      return;
+      var ser = btn.getAttribute('data-ser')||''; watchSeriesName(ser); return;
     }
+
     if(action==='set-series'){
-      var b4=findBook(bookId); if(!b4) return;
-      var name=prompt('Series name:', b4.seriesName||''); if(name==null) return;
-      b4.seriesName=String(name).trim();
-      var num=prompt('Series number (optional):', b4.seriesNumber||'');
-      if(num!=null) b4.seriesNumber=String(num).trim();
-      saveAll(); applyFilters(); showToast('Series updated');
+      var b=findBook(bookId); if(!b) return;
+      var name = prompt('Series name for "'+b.title+'":', b.seriesName||'') || '';
+      if(name){ b.seriesName=name; var num = prompt('Series number (optional):', b.seriesNumber||''); if(num!=null) b.seriesNumber=String(num||''); saveAll(false); applyFilters(); showToast('Series set'); }
       return;
     }
+
     if(action==='add-series-books'){
-      var ser2=btn.getAttribute('data-ser')||'';
-      showToast('Tip: add more from "'+ser2+'" via the Add form');
-      return;
+      if(!currentUser){ showToast('Log in first.',true); return; }
+      var sname = btn.getAttribute('data-ser')||''; if(!sname) return;
+      ensureUser(currentUser); var mine=me();
+      var ids = {}; mine.wishList.forEach(function(x){ids[String(x.id)]=1;});
+      var count=0;
+      BOOKS().forEach(function(b){
+        if(String(b.seriesName||'').toLowerCase()===String(sname).toLowerCase()){
+          if(!ids[String(b.id)]){
+            mine.wishList.push({id:b.id,title:b.title,author:b.author,_wellness:(b._scope==='wellness'),_changedAt:Date.now()});
+            ids[String(b.id)]=1; count++;
+          }
+        }
+      });
+      saveAll(false); renderMyLists(); showToast(count?('Added '+count+' to Want to Read'):'Nothing new to add'); return;
+    }
+
+    // My Lists: remove entries
+    if(action==='remove-current' || action==='remove-wish' || action==='remove-read'){
+      if(!currentUser){ showToast('Log in first.',true); return; }
+      var uid = String(bookId);
+      var m=me();
+      if(action==='remove-current') m.currentReading = m.currentReading.filter(function(x){return String(x.id)!==uid;});
+      if(action==='remove-wish') m.wishList = m.wishList.filter(function(x){return String(x.id)!==uid;});
+      if(action==='remove-read') m.readList = m.readList.filter(function(x){return String(x.id)!==uid;});
+      saveAll(false); renderMyLists(); showToast('Removed'); return;
     }
   });
 
-  // Unwatch buttons in Watched Series list
+  // Admin separate page already wired above
+  $('#open-admin-page').addEventListener('click', function(){});
+
+  // remove watched series buttons (prefs)
   document.addEventListener('click', function(e){
-    var u=e.target.closest && e.target.closest('[data-unwatch]');
-    if(!u) return;
-    unwatchSeriesName(u.getAttribute('data-unwatch')||'');
+    var x = e.target.closest && e.target.closest('[data-unwatch]');
+    if(x){ unwatchSeriesName(x.getAttribute('data-unwatch')); }
   });
+
 });
+
+/* ========= END Boot ========= */
 </script>
 </body>
 </html>
