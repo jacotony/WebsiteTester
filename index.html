@@ -306,8 +306,8 @@ body{
 
   <!-- Scope Tabs -->
   <nav class="scope-nav" id="scope-nav">
-    <button class="nav-btn active" id="scope-main-btn" type="button">Fun Books</button>
-    <button class="nav-btn" id="scope-wellness-btn" type="button">Wellness Related</button>
+    <button class="nav-btn active" id="scope-main-btn" type="button">Main Book Club Feed</button>
+    <button class="nav-btn" id="scope-wellness-btn" type="button">Wellness Related Feed</button>
   </nav>
 
   <div class="top-row">
@@ -787,6 +787,32 @@ var showToast=function(msg,isError){
 };
 var formatDate=function(v){ var n=Number(v); var d=new Date(isFinite(n)?n:v); return d.toLocaleDateString(); };
 
+/* === NEW small helpers your code relied on === */
+function findBookById(id){
+  var sid=String(id);
+  var all=(books||[]).concat(wellnessBooks||[]);
+  for(var i=0;i<all.length;i++){ if(String(all[i].id)===sid) return all[i]; }
+  return null;
+}
+function addActionComment(book, text, by, isSystem){
+  if(!book) return;
+  book.comments = book.comments || [];
+  book.comments.push({ id: Date.now(), commenter: by||'Anonymous', likes: 0, likedBy: [], text: text||'', system: !!isSystem });
+  saveAll(false);
+}
+function openSection(name){
+  $$('.section').forEach(function(s){ s.classList.remove('active'); });
+  if(name==='feed') $('#feed').classList.add('active');
+  if(name==='add') $('#add').classList.add('active');
+  if(name==='my-books') $('#my-books').classList.add('active');
+  if(name==='prefs') $('#prefs').classList.add('active');
+  $$('#main-nav .nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(name==='feed') $('#feed-btn').classList.add('active');
+  if(name==='add') $('#add-btn').classList.add('active');
+  if(name==='my-books') $('#my-books-btn').classList.add('active');
+  if(name==='prefs') $('#prefs-btn').classList.add('active');
+}
+
 /* ========= Local & Remote ========= */
 function effectiveApiKey(){ return (sitePrefs.cloudApiKey||'').trim() || DEFAULT_API_KEY; }
 function effectiveBin(){ return (sitePrefs.cloudBinId||'').trim() || DEFAULT_BIN_ID; }
@@ -841,7 +867,7 @@ function me(){ return userData[currentUser]||defaultUser(); }
 /* ========= PWA ========= */
 function setupPWA(){
   try{
-    const manifest={name:"Book Club",short_name:"Book Club",start_url:".",display:"standalone",background_color:"#ffffff",theme_color:"#2f4a3e",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAAAAABQFZ1hAAAAC0lEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAB4p1nNAAE=",sizes:"192x192",type:"image/png"}]};
+    const manifest={name:"Book Club",short_name:"Book Club",start_url:".",display:"standalone",background_color:"#ffffff",theme_color:"#2f4a3e",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAAAAABQFZ1hAAAAC0lEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAB4p1nNAAE=",sizes:"192x192",type:"image/png"}]}};
     const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
     const url=URL.createObjectURL(blob);
     const link=$('#app-manifest'); if(link) link.href=url;
@@ -1493,6 +1519,7 @@ function renderComingSoon(){
 /* ========= Scope Switch ========= */
 function setScope(s){
   currentScope = (s==='wellness') ? 'wellness' : 'main';
+  document.documentElement.setAttribute('data-scope', currentScope);
   $('#scope-main-btn').classList.toggle('active', currentScope==='main');
   $('#scope-wellness-btn').classList.toggle('active', currentScope==='wellness');
   $('#scope-subtitle').textContent = currentScope==='wellness' ? 'Wellness recommendations & resources' : 'Find your next favorite book';
@@ -1929,6 +1956,14 @@ document.addEventListener('DOMContentLoaded', async function(){
     $('#reason').value=text; $('#reason').focus();
   });
 
+  // CHECK NEW RELEASES (stub)
+  function checkNewReleases(){
+    var watched=sitePrefs.watchedSeries||[];
+    if(!watched.length){ showToast('No watched series yet.'); return; }
+    renderComingSoon(); showToast('Checked for new releases');
+  }
+  $('#check-new-btn').addEventListener('click', checkNewReleases);
+
   // global click handlers (comments, likes, lists, series, etc.)
   document.addEventListener('click',function(e){
     var btn=e.target.closest && e.target.closest('[data-action]');
@@ -1986,534 +2021,85 @@ document.addEventListener('DOMContentLoaded', async function(){
         meData.wishList=meData.wishList.filter(function(x){return String(x.id)!==String(br.id);});
       }
       addActionComment(br, currentUser+' started reading', currentUser);
-      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:br.title,action:'started reading'}});
-      saveAll(); renderMyLists(); updateStats(); showToast('Added to Currently Reading'); return;
+      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:br.title,action:'started Currently Reading'}});
+      saveAll(); renderMyLists(); updateStats(); showToast('Moved to Currently Reading');
+      return;
     }
     if(action==='finish' || action==='rate-again'){
-      if(!currentUser){ showToast('Log in to finish.',true); return; }
-      var bf=findBook(bookId); if(!bf) return; openFinishModal(bf); return;
-    }
-    if(action==='remove-current'){
-      ensureUser(currentUser); me().currentReading=me().currentReading.filter(function(x){return String(x.id)!==String(bookId);});
-      saveAll(); renderMyLists(); updateStats(); return;
-    }
-    if(action==='remove-wish'){
-      ensureUser(currentUser); me().wishList=me().wishList.filter(function(x){return String(x.id)!==String(bookId);});
-      saveAll(); renderMyLists(); updateStats(); return;
-    }
-    if(action==='remove-read'){
-      ensureUser(currentUser); me().readList=me().readList.filter(function(x){return String(x.id)!==String(bookId);});
-      saveAll(); renderMyLists(); updateStats(); return;
+      if(!currentUser){ showToast('Log in to rate.',true); return; }
+      var b0=findBook(bookId); if(!b0) return;
+      openFinishModal(b0);
+      return;
     }
     if(action==='add-comment'){
-      var wrap=btn.closest('.c-form'); if(!wrap) return;
-      var name=(wrap.querySelector('[data-field="name"]').value||'').trim()||currentUser||'Anonymous';
-      var text=(wrap.querySelector('[data-field="text"]').value||'').trim(); if(!text){ showToast('Comment cannot be empty.',true); return; }
-      var bb=findBook(bookId); if(!bb) return;
-      bb.comments=bb.comments||[]; bb.comments.push({id:Date.now()+Math.random(),commenter:name,text:text,likes:0,likedBy:[],system:false});
-      mergeOrPostActivity({type:'comment',payload:{user:name,title:bb.title}});
-      saveAll(); applyFilters(); showToast('Comment added!'); return;
+      if(!currentUser){ showToast('Log in to comment.',true); return; }
+      var bk=findBook(bookId); if(!bk) return;
+      var form=document.querySelector('.c-form[data-id="'+bookId+'"]');
+      if(!form) return;
+      var name=(form.querySelector('[data-field="name"]').value||currentUser).trim();
+      var text=(form.querySelector('[data-field="text"]').value||'').trim();
+      if(!text){ showToast('Type a comment first.',true); return; }
+      addActionComment(bk, text, name);
+      form.querySelector('[data-field="text"]').value='';
+      mergeOrPostActivity({type:'comment',payload:{user:name,title:bk.title}});
+      saveAll(); applyFilters(); showToast('Comment added');
+      return;
     }
     if(action==='like-comment'){
-      if(!currentUser){ showToast('Log in to like comments.', true); return; }
-      var bl=findBook(bookId); if(!bl) return;
-      var c=(bl.comments||[]).find(function(x){return String(x.id)===String(cid);}); if(!c) return;
+      if(!currentUser){ showToast('Log in to like comments.',true); return; }
+      var b1=findBook(bookId); if(!b1) return;
+      var c=(b1.comments||[]).find(function(cc){return String(cc.id)===String(cid);});
+      if(!c) return;
       c.likedBy=c.likedBy||[];
       if(c.likedBy.indexOf(currentUser)>-1){ c.likedBy=c.likedBy.filter(function(n){return n!==currentUser;}); c.likes=Math.max(0,(c.likes||0)-1); }
-      else { c.likedBy.push(currentUser); c.likes=(c.likes||0)+1; }
+      else{ c.likedBy.push(currentUser); c.likes=(c.likes||0)+1; }
       saveAll(); applyFilters(); return;
     }
     if(action==='similar'){
-      var b=findBook(bookId); if(!b) return;
-      var seed = (b.tags && b.tags[0]) || b.author || b.title;
-      $('#search-input').value = seed;
-      openSection('feed'); applyFilters(); window.scrollTo({top:0,behavior:'smooth'});
+      var b2=findBook(bookId); if(!b2) return;
+      var term=(b2.tags&&b2.tags[0]) || (b2.author||'').split(' ').slice(-1)[0] || b2.genre || '';
+      $('#search-input').value=term||'';
+      applyFilters();
+      showToast('Showing items similar to "'+b2.title+'"');
       return;
     }
     if(action==='share'){
-      var b=findBook(bookId); if(!b) return;
-      var avg=averageRatingForBook(b).toFixed(1);
-      var text = '“'+b.title+'” by '+b.author+' — '+avg+'★ on Book Club. '+mediaUrl(b);
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ showToast('Copied share text!'); }); }
-      else { prompt('Copy this:', text); }
+      var b3=findBook(bookId); if(!b3) return;
+      var link=mediaUrl(b3);
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(link).then(function(){ showToast('Link copied'); }).catch(function(){ window.open(link,'_blank'); showToast('Opened details'); });
+      }else{
+        window.open(link,'_blank'); showToast('Opened details');
+      }
       return;
     }
     if(action==='watch-series'){
-      var name=btn.getAttribute('data-ser')||''; if(name){ watchSeriesName(name); }
+      var ser=btn.getAttribute('data-ser')||''; if(ser) watchSeriesName(ser);
       return;
     }
     if(action==='set-series'){
-      var b=findBook(bookId); if(!b) return;
-      var val=prompt('Enter series name (optional # at end like "Stormlight 3"):', b.seriesName? (b.seriesNumber? (b.seriesName+' '+b.seriesNumber) : b.seriesName) : '');
-      if(val!=null){
-        val=String(val).trim();
-        if(!val){ b.seriesName=''; b.seriesNumber=''; }
-        else{
-          var m = val.match(/^(.*?)(?:\s+(\d+))?$/);
-          b.seriesName=(m&&m[1]?m[1].trim():val);
-          b.seriesNumber=(m&&m[2]?m[2]:'');
-        }
-        saveAll(); applyFilters(); showToast('Series updated');
-      }
+      var b4=findBook(bookId); if(!b4) return;
+      var name=prompt('Series name:', b4.seriesName||''); if(name==null) return;
+      b4.seriesName=String(name).trim();
+      var num=prompt('Series number (optional):', b4.seriesNumber||'');
+      if(num!=null) b4.seriesNumber=String(num).trim();
+      saveAll(); applyFilters(); showToast('Series updated');
       return;
     }
     if(action==='add-series-books'){
-      var ser=btn.getAttribute('data-ser')||''; if(!ser) return;
-      openSection('add');
-      $('#series-name').value=ser;
-      $('#watch-series').checked=true;
-      $('#book-search').value=ser; $('#book-results').innerHTML=''; $('#book-results').style.display='none';
-      $('#media-type').value='book';
-      // kick off a search
-      searchGoogleBooks(ser);
-      showToast('Searching books for series "'+ser+'"…');
+      var ser2=btn.getAttribute('data-ser')||'';
+      showToast('Tip: add more from "'+ser2+'" via the Add form');
       return;
     }
   });
 
-  // Coming Soon checker
-  $('#check-new-btn').addEventListener('click', async function(){
-    var series = sitePrefs.watchedSeries||[]; if(!series.length){ showToast('No watched series yet', true); return; }
-    setLoading(this,true);
-    try{
-      var found=[];
-      for (var i=0;i<series.length;i++){
-        var s = series[i];
-        try{
-          const r = await fetch('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent('"'+s+'"')+'&orderBy=newest&maxResults=5');
-          if(!r.ok) continue;
-          const data = await r.json();
-          (data.items||[]).forEach(function(it){
-            var v=it.volumeInfo||{}, pd=String(v.publishedDate||'');
-            // Only include future-dated (best effort when full date), otherwise newest with year >= current
-            var year = parseInt(pd.slice(0,4),10);
-            if(!year || year < new Date().getFullYear()) return;
-            found.push({title:v.title||'Unknown', author:(v.authors||[]).join(', ')||'Unknown', release:pd, series:s});
-          });
-        }catch(_e){}
-      }
-      if(found.length){
-        var store = UPCOMING();
-        // merge by title
-        var seen={}; store.forEach(function(x){ seen[x.title+'|'+x.series]=1; });
-        found.forEach(function(x){ if(!seen[x.title+'|'+x.series]) store.push(x); });
-        if(currentScope==='main') comingSoon=store; else wellnessComingSoon=store;
-        saveAll(); renderComingSoon(); showToast('Found '+found.length+' upcoming title(s)');
-      }else{
-        showToast('No upcoming releases found');
-      }
-    }finally{ setLoading(this,false); }
-  });
-
-  // trending click scroll
-  var t1=$('#trending-prelogin');
-  if(t1){ t1.addEventListener('click',function(e){ var r=e.target.closest && e.target.closest('[data-jump]'); if(!r) return; var id=r.getAttribute('data-jump'); var el=$('#book-'+id); if(el){ openSection('feed'); el.scrollIntoView({behavior:'smooth',block:'start'}); } }); }
-
-  // Watched series remove
+  // Unwatch buttons in Watched Series list
   document.addEventListener('click', function(e){
-    var un=e.target.closest && e.target.closest('[data-unwatch]'); if(!un) return;
-    unwatchSeriesName(un.getAttribute('data-unwatch'));
+    var u=e.target.closest && e.target.closest('[data-unwatch]');
+    if(!u) return;
+    unwatchSeriesName(u.getAttribute('data-unwatch')||'');
   });
-
-  // open admin page
-  $('#admin-back').addEventListener('click', closeAdminPage);
 });
-
-/* Helpers */
-function openSection(id){
-  $$('.section').forEach(function(s){s.classList.remove('active');});
-  $('#'+id).classList.add('active');
-  $$('.nav-btn').forEach(function(b){ if(['feed-btn','add-btn','my-books-btn','prefs-btn'].indexOf(b.id)>-1) b.classList.remove('active'); });
-  if(id==='feed') $('#feed-btn').classList.add('active');
-  if(id==='add') $('#add-btn').classList.add('active');
-  if(id==='my-books') $('#my-books-btn').classList.add('active');
-  if(id==='prefs') $('#prefs-btn').classList.add('active');
-}
-function addActionComment(book, text, who){
-  book.comments=book.comments||[];
-  book.comments.unshift({id:Date.now()+Math.random(), commenter: who || 'Anonymous', text: text, likes:0, likedBy:[], system:false});
-}
-function findBookById(id){
-  id=String(id);
-  var b = BOOKS().find(function(x){return String(x.id)===id;});
-  if(b) return b;
-  return OTHER_BOOKS().find(function(x){return String(x.id)===id;});
-}
-  <script>
-/* === Success screen + Series (hidden) + Category/Series autofill — drop-in patch === */
-document.addEventListener('DOMContentLoaded', function(){
-
-  /* ----------------------- success modal ----------------------- */
-  var after = document.createElement('div');
-  after.id = 'after-share-modal';
-  after.className = 'toast';
-  after.style.left = '50%';
-  after.style.transform = 'translate(-50%,0)';
-  after.style.bottom = 'auto';
-  after.style.top = '20%';
-  after.style.maxWidth = '520px';
-  after.style.pointerEvents = 'auto';
-  after.innerHTML = [
-    '<div>',
-      '<h3 style="margin-bottom:6px">Your recommendation was posted!</h3>',
-      '<p class="small" style="margin-bottom:10px">What would you like to do next?</p>',
-      '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">',
-        '<button class="nav-btn" data-act="again" type="button">Recommend More</button>',
-        '<button class="nav-btn" data-act="fun" type="button">Fun Books</button>',
-        '<button class="nav-btn" data-act="well" type="button">Wellness</button>',
-        '<button class="nav-btn" data-act="lists" type="button">My Lists</button>',
-        '<button class="nav-btn" data-act="close" type="button" style="background:#b74a4a;border-color:#5c1f1f">Close</button>',
-      '</div>',
-    '</div>'
-  ].join('');
-  document.body.appendChild(after);
-
-  // make it center like the finish modal
-  var st = document.createElement('style');
-  st.textContent = '#after-share-modal.show{transform:translate(-50%,0);}';
-  document.head.appendChild(st);
-
-  var lastRecommendedScope = null;
-  function openAfterShare(){ after.classList.add('show'); }
-  function closeAfterShare(){ after.classList.remove('show'); }
-
-  after.addEventListener('click', function(e){
-    var act = e.target && e.target.getAttribute('data-act');
-    if(!act) return;
-    if(act==='again'){
-      if(typeof setScope==='function' && lastRecommendedScope){ setScope(lastRecommendedScope); }
-      if(typeof openSection==='function'){ openSection('add'); }
-      closeAfterShare();
-    }else if(act==='fun'){
-      if(typeof setScope==='function'){ setScope('main'); }
-      if(typeof openSection==='function'){ openSection('feed'); }
-      closeAfterShare();
-    }else if(act==='well'){
-      if(typeof setScope==='function'){ setScope('wellness'); }
-      if(typeof openSection==='function'){ openSection('feed'); }
-      closeAfterShare();
-    }else if(act==='lists'){
-      if(typeof openSection==='function'){ openSection('my-books'); }
-      closeAfterShare();
-    }else if(act==='close'){
-      if(typeof setScope==='function' && lastRecommendedScope){ setScope(lastRecommendedScope); }
-      if(typeof openSection==='function'){ openSection('feed'); }
-      closeAfterShare();
-    }
-  });
-
-  /* --------- add Series UI (hidden behind a pill button) -------- */
-  (function addSeriesUI(){
-    var form = document.getElementById('book-form');
-    if(!form) return;
-
-    // container right before the Tags block
-    var tagsBlock = document.getElementById('tags-container')?.parentNode || form.lastElementChild;
-
-    var wrap = document.createElement('div');
-    wrap.id = 'series-wrap';
-    wrap.innerHTML = [
-      '<div style="display:flex;align-items:center;gap:8px;margin:8px 0">',
-        '<button class="pill-btn" id="series-toggle" type="button" title="Show series fields">Series (optional)</button>',
-        '<span class="small" id="series-status" style="color:#2b3832;display:none">Auto-detected</span>',
-      '</div>',
-      '<div id="series-fields" style="display:none">',
-        '<div class="search" style="grid-template-columns:2fr 1fr">',
-          '<div><label class="small">Series Name</label><input class="input" id="series-name-input" placeholder="e.g., The Stormlight Archive"></div>',
-          '<div><label class="small">Series Number</label><input class="input" id="series-number-input" placeholder="e.g., 1"></div>',
-        '</div>',
-      '</div>'
-    ].join('');
-    tagsBlock.parentNode.insertBefore(wrap, tagsBlock);
-
-    document.getElementById('series-toggle').addEventListener('click', function(){
-      var f = document.getElementById('series-fields');
-      f.style.display = (f.style.display==='none' || !f.style.display) ? 'block' : 'none';
-    });
-  })();
-
-  /* ------------- Category + Series: populate from pick ------------- */
-  function normalize(s){ return String(s||'').toLowerCase().replace(/&/g,'and').trim(); }
-  function setGenre(value){
-    var sel=document.getElementById('genre'); if(!sel) return;
-    var want=String(value||'').toLowerCase();
-    var ok = Array.prototype.some.call(sel.options, function(o){ return o.value===want; });
-    sel.value = ok ? want : (want||'other');
-    if(!ok && sel.value!=='other') sel.value='other';
-  }
-  function guessCategoryFrom(result){
-    if(result && result.type==='podcast') return 'podcast';
-    var cats = (result && result.categories || []).map(normalize);
-    var map = {
-      'science fiction':'sci-fi','sci fi':'sci-fi','sci-fi':'sci-fi',
-      'young adult':'young adult','ya':'young adult',
-      'mystery':'mystery','detective':'mystery',
-      'thriller':'thriller','suspense':'thriller',
-      'romance':'romance','fantasy':'fantasy','horror':'horror',
-      'history':'history','memoir':'memoir','biography':'biography',
-      'business and economics':'business','business':'business',
-      'self-help':'self-help','self help':'self-help',
-      'psychology':'psychology','philosophy':'philosophy',
-      'religion':'spirituality/religion','spirituality':'spirituality/religion',
-      'health and fitness':'health & fitness','health':'health & fitness','fitness':'health & fitness',
-      'technology':'technology','poetry':'poetry',
-      'graphic novels':'comics/graphic novel','comics & graphic novels':'comics/graphic novel','comics':'comics/graphic novel',
-      'dystopian':'dystopian','literary':'literary fiction','classics':'classics'
-    };
-    for(var i=0;i<cats.length;i++){
-      var raw=cats[i];
-      if(map[raw]) return map[raw];
-      if(/sci[-\s]?fi|science\s*fiction/.test(raw)) return 'sci-fi';
-      if(/young\s*adult|^\s*ya\s*$/.test(raw)) return 'young adult';
-      if(/mystery|detective|crime/.test(raw)) return 'mystery';
-      if(/thriller|suspense/.test(raw)) return 'thriller';
-      if(/fantasy/.test(raw)) return 'fantasy';
-      if(/romance/.test(raw)) return 'romance';
-      if(/horror/.test(raw)) return 'horror';
-      if(/memoir|autobiograph/.test(raw)) return 'memoir';
-      if(/biograph/.test(raw)) return 'biography';
-      if(/business|economics|finance|management|startup/.test(raw)) return 'business';
-      if(/self[-\s]?help|productivity|habits/.test(raw)) return 'self-help';
-      if(/psychology|behavior|cognitive/.test(raw)) return 'psychology';
-      if(/philosophy|ethic|stoic/.test(raw)) return 'philosophy';
-      if(/relig|christian|faith|spirit/.test(raw)) return 'spirituality/religion';
-      if(/health|fitness|wellness|sleep|stress/.test(raw)) return 'health & fitness';
-      if(/technology|computer|programming|software/.test(raw)) return 'technology';
-      if(/poetry/.test(raw)) return 'poetry';
-      if(/dystop/.test(raw)) return 'dystopian';
-      if(/literary/.test(raw)) return 'literary fiction';
-    }
-    var s=normalize((result && result.description) || '');
-    if(/sci[-\s]?fi|science\s*fiction/.test(s)) return 'sci-fi';
-    if(/mystery|detective|crime/.test(s)) return 'mystery';
-    if(/fantasy/.test(s)) return 'fantasy';
-    if(/romance/.test(s)) return 'romance';
-    if(/thriller|suspense/.test(s)) return 'thriller';
-    return 'other';
-  }
-
-  // series parsing
-  function parseSeriesFromTitle(t){
-    var out = {name:'', number:''};
-    if(!t) return out;
-    // Patterns like: "Title (Series Name, #1)" OR "(Series Name Book 1)"
-    var m = t.match(/\(([^)]+?)(?:,?\s*(?:book|bk|volume|vol\.?|#)\s*(\d+))?\)/i);
-    if(m){
-      // m[1] might be "The Stormlight Archive" or "The Stormlight Archive, #1"
-      var pNum = m[1].match(/(?:^|,\s*)(?:book|bk|volume|vol\.?|#)\s*(\d+)/i);
-      out.name = m[1].replace(/,\s*#?\d+.*$/,'').replace(/\s*(book|bk|volume|vol\.?)\s*\d+$/i,'').trim();
-      out.number = (m[2] || (pNum && pNum[1]) || '').trim();
-      return out;
-    }
-    // "#1" somewhere after a dash/colon
-    var m2 = t.match(/-\s*([^–—:]+)\s*[,–—:]?\s*#\s*(\d+)/i);
-    if(m2){ out.name = m2[1].trim(); out.number = m2[2].trim(); return out; }
-    // "Book 2 of <Series>"
-    var m3 = t.match(/book\s*(\d+)\s*of\s*([^:()]+)/i);
-    if(m3){ out.number=m3[1]; out.name=m3[2].trim(); return out; }
-    return out;
-  }
-  function parseSeriesFromDesc(d){
-    var out = {name:'', number:''};
-    if(!d) return out;
-    var m = d.match(/(?:book|bk|volume|vol\.?)\s*(\d+)\s*(?:of|in)\s*([A-Z][\w '\-:]+)/i);
-    if(m){ out.number=m[1]; out.name=m[2].replace(/\.$/,'').trim(); return out; }
-    return out;
-  }
-  function setSeries(name,num, auto){
-    var f = document.getElementById('series-fields');
-    var nameEl = document.getElementById('series-name-input');
-    var numEl  = document.getElementById('series-number-input');
-    var status = document.getElementById('series-status');
-    if(!nameEl || !numEl) return;
-    if(name) nameEl.value = name;
-    if(num)  numEl.value  = num;
-    if(auto && (name || num)){
-      status.style.display = 'inline';
-      // open the fields so they can see/edit
-      if(f && (f.style.display==='none' || !f.style.display)){
-        f.style.display = 'block';
-      }
-    }
-  }
-
-  // When a search result is picked, fill Category + Series
-  document.addEventListener('click', function(e){
-    var pick = e.target.closest && e.target.closest('[data-pick]');
-    if(!pick) return;
-    var i = Number(pick.getAttribute('data-pick'));
-    if(isNaN(i) || !Array.isArray(window.lastSearchItems)) return;
-    var item = window.lastSearchItems[i]; if(!item) return;
-
-    // Ensure media type matches
-    var mt = document.getElementById('media-type');
-    if(mt){ mt.value = (item.type==='podcast' ? 'podcast' : 'book'); }
-
-    // Category
-    setGenre(guessCategoryFrom(item));
-
-    // Series (books: parse from title/description; podcast: usually show title == series)
-    if(item.type==='podcast'){
-      // Podcasts are inherently "series" shows; leave number blank
-      setSeries(item.title || '', '', true);
-    }else{
-      var fromT = parseSeriesFromTitle(item.title || '');
-      var fromD = parseSeriesFromDesc(item.description || '');
-      var name = fromT.name || fromD.name || '';
-      var num  = fromT.number || fromD.number || '';
-      if(name || num) setSeries(name, num, true);
-    }
-  }, true); // capture so it runs before default handlers if needed
-
-  // Keep Category in sync with manual media-type flip
-  var mtSel = document.getElementById('media-type');
-  if(mtSel){
-    mtSel.addEventListener('change', function(){
-      if(this.value==='podcast'){ setGenre('podcast'); }
-    });
-  }
-
-  /* --------- show success modal after a real submit success ---------- */
-  var formEl = document.getElementById('book-form');
-  if(formEl){
-    formEl.addEventListener('submit', function(){
-      var scopeAtSubmit = (typeof currentScope!=='undefined') ? currentScope : 'main';
-      // wait a tick for the original handler to create activity + push book
-      setTimeout(function(){
-        try{
-          var arr = (typeof ACTIV==='function') ? ACTIV() : [];
-          var last = arr && arr[0];
-          if(last && last.type==='share' && last.payload && last.payload.user===window.currentUser){
-            // Add series fields onto the most recent book in current scope
-            var b = (typeof BOOKS==='function' && BOOKS()[0]) ? BOOKS()[0] : null;
-            var nameEl = document.getElementById('series-name-input');
-            var numEl  = document.getElementById('series-number-input');
-            if(b && nameEl && numEl){
-              b.seriesName   = (nameEl.value||'').trim();
-              b.seriesNumber = (numEl.value||'').trim();
-              if(typeof saveAll==='function') saveAll();
-            }
-            lastRecommendedScope = scopeAtSubmit;
-            openAfterShare();
-          }
-        }catch(_e){}
-      }, 80);
-    });
-  }
-});
-  <script>
-/* === Category autopopulate fix (books + podcasts) === */
-(function(){
-  function normalize(s){ return String(s||'').toLowerCase().replace(/&/g,'and').trim(); }
-  function guessCategoryFrom(result){
-    if(result && result.type==='podcast') return 'podcast';
-    var cats = (result && result.categories || []).map(normalize);
-    var map = {
-      'science fiction':'sci-fi','sci fi':'sci-fi','sci-fi':'sci-fi',
-      'young adult':'young adult','ya':'young adult',
-      'mystery':'mystery','detective':'mystery',
-      'thriller':'thriller','suspense':'thriller',
-      'romance':'romance','fantasy':'fantasy','horror':'horror',
-      'history':'history','memoir':'memoir','biography':'biography',
-      'business and economics':'business','business':'business',
-      'self-help':'self-help','self help':'self-help',
-      'psychology':'psychology','philosophy':'philosophy',
-      'religion':'spirituality/religion','spirituality':'spirituality/religion',
-      'health and fitness':'health & fitness','health':'health & fitness','fitness':'health & fitness',
-      'technology':'technology','poetry':'poetry',
-      'graphic novels':'comics/graphic novel','comics & graphic novels':'comics/graphic novel','comics':'comics/graphic novel',
-      'dystopian':'dystopian','literary':'literary fiction','classics':'classics'
-    };
-    for(var i=0;i<cats.length;i++){
-      var raw=cats[i];
-      if(map[raw]) return map[raw];
-      if(/sci[-\s]?fi|science\s*fiction/.test(raw)) return 'sci-fi';
-      if(/young\s*adult|^\s*ya\s*$/.test(raw)) return 'young adult';
-      if(/mystery|detective|crime/.test(raw)) return 'mystery';
-      if(/thriller|suspense/.test(raw)) return 'thriller';
-      if(/fantasy/.test(raw)) return 'fantasy';
-      if(/romance/.test(raw)) return 'romance';
-      if(/horror/.test(raw)) return 'horror';
-      if(/memoir|autobiograph/.test(raw)) return 'memoir';
-      if(/biograph/.test(raw)) return 'biography';
-      if(/business|economics|finance|management|startup/.test(raw)) return 'business';
-      if(/self[-\s]?help|productivity|habits/.test(raw)) return 'self-help';
-      if(/psychology|behavior|cognitive/.test(raw)) return 'psychology';
-      if(/philosophy|ethic|stoic/.test(raw)) return 'philosophy';
-      if(/relig|christian|faith|spirit/.test(raw)) return 'spirituality/religion';
-      if(/health|fitness|wellness|sleep|stress/.test(raw)) return 'health & fitness';
-      if(/technology|computer|programming|software/.test(raw)) return 'technology';
-      if(/poetry/.test(raw)) return 'poetry';
-      if(/dystop/.test(raw)) return 'dystopian';
-      if(/literary/.test(raw)) return 'literary fiction';
-    }
-    var s=normalize((result && result.description) || '');
-    if(/sci[-\s]?fi|science\s*fiction/.test(s)) return 'sci-fi';
-    if(/mystery|detective|crime/.test(s)) return 'mystery';
-    if(/fantasy/.test(s)) return 'fantasy';
-    if(/romance/.test(s)) return 'romance';
-    if(/thriller|suspense/.test(s)) return 'thriller';
-    return 'other';
-  }
-  function setGenre(value){
-    var sel=document.getElementById('genre'); if(!sel) return;
-    var want=String(value||'').toLowerCase();
-    var ok = Array.prototype.some.call(sel.options, function(o){ return o.value===want; });
-    sel.value = ok ? want : 'other';
-  }
-
-  /* Run BEFORE your original click handler (capture phase) */
-  document.addEventListener('click', function(e){
-    var pick = e.target.closest && e.target.closest('[data-pick]');
-    if(!pick) return;
-    var i = Number(pick.getAttribute('data-pick'));
-    if(isNaN(i) || !Array.isArray(window.lastSearchItems)) return;
-    var item = window.lastSearchItems[i]; if(!item) return;
-
-    // Ensure media type matches the pick
-    var mt = document.getElementById('media-type');
-    if(mt){ mt.value = (item.type==='podcast' ? 'podcast' : 'book'); }
-
-    // Auto-set Category
-    setGenre(guessCategoryFrom(item));
-  }, true); // capture=true so this fires first
-
-  // If user flips to Podcast manually, keep Category in sync
-  var mtSel = document.getElementById('media-type');
-  if (mtSel) {
-    mtSel.addEventListener('change', function () {
-      if (this.value === 'podcast') { setGenre('podcast'); }
-    });
-  }
-
-  /* --------- show success modal after a real submit success ---------- */
-  var formEl = document.getElementById('book-form');
-  if (formEl) {
-    formEl.addEventListener('submit', function () {
-      var scopeAtSubmit = (typeof currentScope !== 'undefined') ? currentScope : 'main';
-      setTimeout(function () {
-        try {
-          var arr = (typeof ACTIV === 'function') ? ACTIV() : [];
-          var last = arr && arr[0];
-          if (last && last.type === 'share' && last.payload && last.payload.user === window.currentUser) {
-            var b = (typeof BOOKS === 'function' && BOOKS()[0]) ? BOOKS()[0] : null;
-            var nameEl = document.getElementById('series-name-input');
-            var numEl  = document.getElementById('series-number-input');
-            if (b && nameEl && numEl) {
-              b.seriesName   = (nameEl.value || '').trim();
-              b.seriesNumber = (numEl.value  || '').trim();
-              if (typeof saveAll === 'function') saveAll();
-            }
-            lastRecommendedScope = scopeAtSubmit;
-            openAfterShare();
-          }
-        } catch (_e) {}
-      }, 80);
-    });
-  }
-});  <!-- closes document.addEventListener('DOMContentLoaded', ...) -->
 </script>
 </body>
 </html>
-
-
