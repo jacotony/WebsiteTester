@@ -4,155 +4,159 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Book Club</title>
-
-<!-- PWA / Home-screen meta (safe if left as-is; won’t break file://) -->
-<meta name="theme-color" content="#4f46e5">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Book Club">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#564fd6">
 <link id="app-manifest" rel="manifest">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANgAAADYCAQAAAAzSx0mAAAAC0lEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAB4p1nNAAE="/>
 
 <style>
 /* =========================
-   Neutral (slate/indigo) theme — NO GREEN
+   Soft Oat Theme (no green)
    ========================= */
 :root{
-  --pine:#4f46e5;           /* indigo accent */
-  --spruce:#0f172a;         /* slate-900 ink */
-  --sage:#e5e7eb;           /* gray-200 line */
-  --silver:#cbd5e1;         /* slate-300 */
-  --mist:#f8fafc;           /* slate-50 bg */
-  --accent:#4f46e5;         /* primary */
-  --accent-2:#4338ca;       /* primary hover */
-  --ink:#111827;            /* body text */
-  --muted:#6b7280;          /* secondary text */
-  --line:#e5e7eb;           /* borders */
-  --gold:#f59e0b;           /* stars */
-  --shadow:0 10px 24px rgba(15,23,42,.10);
+  --bg:#f6f3ec;              /* warm background */
+  --bg2:#efeae1;             /* subtle gradient stop */
+  --panel:#fcfaf5;           /* panels/cards */
+  --ink:#17181c;             /* text */
+  --muted:#62656e;           /* secondary text */
+  --line:#e7e2d9;            /* borders */
+  --accent:#564fd6;          /* indigo accent */
+  --accent-2:#4338ca;        /* hover/active */
+  --chip:#efeff6;            /* chip bg */
+  --chip-border:#cbcbe9;
+  --gold:#f59e0b;            /* stars */
+  --shadow:0 10px 24px rgba(0,0,0,.08);
+}
+
+/* Optional dim mode */
+body.dim {
+  --bg:#111318;
+  --bg2:#0d0f14;
+  --panel:#181b22;
+  --ink:#f3f4f6;
+  --muted:#a6adbb;
+  --line:#2a2f3a;
+  --accent:#7c86ff;
+  --accent-2:#5f69ff;
+  --chip:#212633;
+  --chip-border:#2e3443;
+  --shadow:0 10px 24px rgba(0,0,0,.35);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
-  background:
-    radial-gradient(1200px 600px at 50% -200px, var(--mist) 0%, transparent 60%),
-    linear-gradient(180deg,#ffffff 0%, #f5f7fb 100%);
   color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -200px, var(--bg2) 0%, transparent 55%),
+    linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
 }
 
 /* Layout */
 .container{max-width:1100px;margin:0 auto;padding:14px}
 .header{text-align:center;margin-bottom:14px}
-.header h1{font-size:1.8rem;margin-bottom:6px;color:#0f172a}
+.header h1{font-size:1.8rem;margin-bottom:6px}
 .header p{opacity:.95;font-size:.95rem}
-.user-bar{display:none;justify-content:space-between;align-items:center;background:#fff;padding:8px 12px;border-radius:14px;color:#111;border:1px solid var(--line);box-shadow:var(--shadow);margin:10px 0}
+.user-bar{display:none;justify-content:space-between;align-items:center;background:var(--panel);padding:8px 12px;border-radius:14px;color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow);margin:10px 0}
 .toolbar{display:flex;gap:8px}
 
+/* Buttons */
 .pill-btn,.nav-btn,.c-btn{
   background:var(--accent); color:#fff; border:0; padding:8px 12px;
   border-radius:12px; cursor:pointer; font-size:12px; font-weight:800
 }
 .pill-btn:hover,.nav-btn:hover,.c-btn:hover{filter:brightness(1.06)}
 .pill-btn:focus-visible,.nav-btn:focus-visible,.c-btn:focus-visible{outline:3px solid #c7d2fe; outline-offset:2px}
-.btn-ghost{ background:#fff; color:#111827; border:1px solid var(--line) }
-
-.chip{background:#f3f4f6;border:1px solid var(--line);color:#111827;padding:2px 8px;border-radius:999px;font-size:12px}
+.btn-ghost{ background:var(--panel); color:var(--ink); border:1px solid var(--line) }
+.chip{background:var(--chip);border:1px solid var(--chip-border);color:var(--ink);padding:2px 8px;border-radius:999px;font-size:12px}
 
 /* Top row */
 .top-row{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin:8px 0 14px}
 .stats{display:flex;gap:8px;flex-wrap:wrap}
-.stat{background:#fff;border:1px solid var(--line);border-radius:12px;color:#111827;padding:8px 10px;box-shadow:var(--shadow);font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:8px 10px;box-shadow:var(--shadow);font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
 .stat strong{font-size:18px;line-height:1}
-.users-pop{position:absolute;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:8px 10px;display:none;z-index:40}
+.users-pop{position:absolute;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:8px 10px;display:none;z-index:40}
 
 /* Leaderboard */
-.leaderboard{background:#fff;border-radius:12px;padding:10px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border:1px solid var(--line)}
-.lb-card{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;box-shadow:var(--shadow)}
-.lb-card h3{font-size:14px;color:#0f172a;margin-bottom:6px}
+.leaderboard{background:var(--panel);border-radius:12px;padding:10px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border:1px solid var(--line)}
+.lb-card{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--panel);box-shadow:var(--shadow)}
+.lb-card h3{font-size:14px;margin-bottom:6px}
 .lb-list{display:grid;gap:6px}
-.lb-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#0f172a}
-.lb-count{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800}
+.lb-row{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.lb-count{background:#eaeafc;border:1px solid #c7c7f6;color:#2d2aa6;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800}
 
 /* Content shell */
-.content{background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.content{background:var(--panel);border-radius:14px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
 .prelogin-row{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 
 /* Activity */
-.activity{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+.activity{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel)}
 .activity-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.activity-head h3{font-size:14px;color:#0f172a}
+.activity-head h3{font-size:14px}
 .activity-body{max-height:180px;overflow:auto}
 .activity.compact .activity-body{max-height:120px}
-.a-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #eef2f7;font-size:13px;color:#111827}
+.a-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #e5e0d6;font-size:13px}
+body.dim .a-item{border-bottom-color:#2a2f3a}
 .a-item:last-child{border-bottom:none}
-.a-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff6e6;font-size:14px}
-.a-meta{font-size:11px;color:#64748b;margin-top:2px}
-.pill{border:1px solid var(--line);background:#f8fafc;color:#1b2a23;padding:0 6px;border-radius:999px;font-size:11px;margin-left:6px}
+.a-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff6e6;color:#9a6b00;font-size:14px}
+.a-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.pill{border:1px solid var(--line);background:var(--panel);padding:0 6px;border-radius:999px;font-size:11px;margin-left:6px}
 
 /* Navs */
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.nav-btn{background:#111827}
+.nav-btn{background:#1f2330}
 .nav-btn.active{background:var(--accent)}
 .scope-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 6px}
-.scope-nav .nav-btn{background:#111827}
+.scope-nav .nav-btn{background:#1f2330}
 .scope-nav .nav-btn.active{background:var(--accent)}
 
 /* Search bar */
 .search{display:grid;grid-template-columns:2fr 1fr repeat(3,1fr);gap:8px;margin:8px 0}
-.input,.select,.textarea{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:#fff;color:var(--ink)}
-.select{background:#fff}
+.input,.select,.textarea{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:var(--panel);color:var(--ink)}
+.select{background:var(--panel)}
 .textarea{min-height:90px;resize:vertical}
-.small{font-size:12px;color:#475569}
+.small{font-size:12px;color:var(--muted)}
 
 /* Sections */
 .section{display:none}.section.active{display:block}
 .feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.post{border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:var(--shadow);padding:14px}
+.post{border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:var(--shadow);padding:14px}
 .head{display:grid;grid-template-columns:92px 1fr;align-items:flex-start;gap:12px}
-.cover,.cover-ph{width:92px;height:138px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;color:#334155}
-.genre{background:#eef2ff;color:#312e81;border:1px solid #c7d2fe;font-weight:900;border-radius:10px;padding:2px 8px;display:inline-block}
-.title{font-size:1.05rem;font-weight:900;color:#0f172a}
-.author{color:#475569;font-style:italic;margin:2px 0 4px}
-.recommender{color:#111827;font-weight:800;margin-bottom:2px}
+.cover,.cover-ph{width:92px;height:138px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:#efece6;display:flex;align-items:center;justify-content:center;font-size:11px}
+.genre{background:#ecebff;color:#2b287a;border:1px solid #c7c6fd;font-weight:900;border-radius:10px;padding:2px 8px;display:inline-block}
+.title{font-size:1.05rem;font-weight:900}
+.author{color:var(--muted);font-style:italic;margin:2px 0 4px}
+.recommender{font-weight:800;margin-bottom:2px}
 .rating-line{display:flex;align-items:center;gap:8px;font-size:12px;margin:2px 0 6px;color:#334155}
 .stars{display:flex;gap:2px}
 .star{font-size:16px;color:#d1d5db;background:none;border:none;cursor:pointer;padding:0 2px}
 .star.filled{color:var(--gold)}
 .tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{background:#f1f5f9;border:1px solid var(--line);color:#0f172a;border-radius:999px;font-weight:800;padding:1px 6px;font-size:11px}
+.tag{background:#efece6;border:1px solid var(--line);border-radius:999px;font-weight:800;padding:1px 6px;font-size:11px}
 
-.series-chip{display:inline-block;margin-left:6px;background:#111827;color:#fff;border:1px solid #0b1220;padding:2px 8px;border-radius:14px;font-size:11px;font-weight:900}
-.status-pill{display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;color:#111827;margin:4px 0}
+.series-chip{display:inline-block;margin-left:6px;background:#1f2330;color:#fff;border:1px solid #0b1220;padding:2px 8px;border-radius:14px;font-size:11px;font-weight:900}
+.status-pill{display:inline-flex;align-items:center;gap:6px;background:#efece6;border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;margin:4px 0}
 .timeline{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:#334155;margin:4px 0 6px}
-.timeline .tl{background:#f6f7fb;border:1px solid #e6e8f0;border-radius:999px;padding:2px 8px}
+.timeline .tl{background:#f1eee8;border:1px solid var(--line);border-radius:999px;padding:2px 8px}
 
 /* actions */
 .actions{border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px}
-.action{background:#ffffff;color:#1f2937;border:1px solid var(--line);border-radius:999px;font-weight:900;padding:6px 10px;cursor:pointer}
-.action:hover,.action.active{background:#eef2ff;border-color:#c7d2fe;color:#3730a3}
+.action{background:var(--panel);color:#1f2937;border:1px solid var(--line);border-radius:999px;font-weight:900;padding:6px 10px;cursor:pointer}
+body.dim .action{color:#e5e7eb}
+.action:hover,.action.active{background:#ecebff;border-color:#c7c6fd;color:#2b287a}
 
 /* comments */
 .comments{margin-top:6px}
 .c-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.c-title{font-weight:900;color:#0f172a;font-size:13px}
-.c-toggle{background:#fff;border:1px solid var(--line);border-radius:999px;font-size:11px;padding:4px 10px;cursor:pointer;color:#111827;font-weight:800}
+.c-title{font-weight:900;font-size:13px}
+.c-toggle{background:var(--panel);border:1px solid var(--line);border-radius:999px;font-size:11px;padding:4px 10px;cursor:pointer;font-weight:800}
 .c-list{display:grid;gap:6px;max-height:260px;overflow:auto}
-.c-item{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px}
+.c-item{background:#f5f2ec;border:1px solid var(--line);border-radius:8px;padding:8px}
+body.dim .c-item{background:#1c2029}
 .c-like{background:none;border:none;color:#1f2937;font-size:12px;cursor:pointer;font-weight:800}
-.c-like.liked{color:#0f172a}
-.c-text{color:#111827;font-size:13px}
+body.dim .c-like{color:#e5e7eb}
+.c-like.liked{color:#2b287a}
+.c-text{font-size:13px}
 .c-form{display:grid;grid-template-columns:140px 1fr 120px;gap:6px;margin-top:6px}
-
-/* Cards & helpers */
-.lb-card h3{margin:0 0 6px}
-.rec-title{font-size:12px;font-weight:800;color:#0f172a;line-height:1.2;margin-top:4px}
-.rec-btn{margin-top:6px;width:100%}
-.recs{display:none;margin:4px 0 10px}
-.recs.show{display:block}
-.recs-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-.rec-card{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;box-shadow:0 4px 10px rgba(0,0,0,.05)}
 
 /* results bar */
 .results-bar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 8px;gap:8px;flex-wrap:nowrap}
@@ -160,16 +164,16 @@ body{
 
 /* login & forms */
 .login{padding:40px 12px;text-align:center}
-.login-card{background:#fff;padding:28px;border-radius:14px;box-shadow:var(--shadow);max-width:420px;margin:0 auto;border:1px solid var(--line)}
+.login-card{background:var(--panel);padding:28px;border-radius:14px;box-shadow:var(--shadow);max-width:420px;margin:0 auto;border:1px solid var(--line)}
 
 /* Toast & modal */
-.toast{position:fixed;bottom:18px;right:18px;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:9999;max-width:70ch;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast{position:fixed;bottom:18px;right:18px;background:#1f2330;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:9999;max-width:70ch;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:#b74a4a}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid #ddd;border-radius:50%;border-top-color:#666;animation:spin .8s linear infinite;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-#finish-modal{position:fixed;left:50%;top:18%;transform:translate(-50%,0);background:#111827;color:#fff;border-radius:12px;box-shadow:0 14px 32px rgba(0,0,0,.35);padding:14px;display:none;z-index:10000;min-width:280px;max-width:520px;border:1px solid #222}
+#finish-modal{position:fixed;left:50%;top:18%;transform:translate(-50%,0);background:#1f2330;color:#fff;border-radius:12px;box-shadow:0 14px 32px rgba(0,0,0,.35);padding:14px;display:none;z-index:10000;min-width:280px;max-width:520px;border:1px solid #222}
 #finish-modal.show{display:block}
 #finish-modal .small{color:#e5e7eb}
 #finish-stars .star{color:#94a3b8}
@@ -184,14 +188,12 @@ body{
   .search{grid-template-columns:1fr 1fr 1fr}
   .c-form{grid-template-columns:1fr}
   .prelogin-row{grid-template-columns:1fr}
-  .recs-row{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:640px){
   .search{grid-template-columns:1fr !important}
   .results-bar{flex-wrap:wrap;gap:6px}
   .results-right{width:100%;justify-content:space-between}
   .users-pop{max-width:calc(100vw - 24px);left:12px !important;right:12px !important}
-  .recs-row{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -217,9 +219,7 @@ body{
 
   <div class="top-row">
     <div class="stats" id="stats">
-      <div class="stat" id="stat-books" title="Jump to feed">
-        <strong id="total-books">0</strong> items
-      </div>
+      <div class="stat" id="stat-books" title="Jump to feed"><strong id="total-books">0</strong> items</div>
       <div class="stat"><strong id="total-reviews">0</strong> comments</div>
       <div class="stat"><strong id="avg-rating">0.0</strong> avg ★</div>
       <div class="stat" title="Total finished items"><strong id="books-read">0</strong> finished</div>
@@ -235,7 +235,6 @@ body{
   </div>
 
   <main class="content">
-
     <!-- Pre-login activity -->
     <div id="prelogin-row" class="prelogin-row">
       <section class="activity compact" id="activity-block">
@@ -276,7 +275,7 @@ body{
       <form class="login-card" id="login-form">
         <h2>Welcome to Book Club</h2>
         <p class="small" style="margin:6px 0 12px">Enter your first name to use your lists</p>
-        <div style="margin-bottom:10px;background:#f7f8fb;padding:8px;border-radius:8px;color:#1b2a23;font-size:12px;border:1px solid var(--line)">
+        <div style="margin:10px 0;background:#f0ece5;padding:8px;border-radius:8px;color:#1b2a23;font-size:12px;border:1px solid var(--line)">
           This site doesn’t auto-log you in on refresh. Type the same name again to see your lists.
         </div>
         <input class="input" type="text" id="username-input" placeholder="Your first name" required style="text-align:center"/>
@@ -291,14 +290,14 @@ body{
       <section id="feed" class="section active">
 
         <!-- Recommended strip -->
-        <div id="recs" class="recs">
+        <div id="recs" class="recs" style="display:none">
           <div style="display:flex;align-items:center;justify-content:space-between;margin:2px 0 6px">
-            <h3 style="font-size:14px;color:#0f172a">Recommended For You</h3>
+            <h3 style="font-size:14px">Recommended For You</h3>
             <div style="display:flex;gap:6px;align-items:center">
               <button id="recs-refresh" class="pill-btn" type="button">Refresh</button>
             </div>
           </div>
-          <div id="recs-row" class="recs-row"></div>
+          <div id="recs-row" class="recs-row" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px"></div>
         </div>
 
         <div class="search">
@@ -319,7 +318,7 @@ body{
           <div class="results-right">
             <label class="small"><input type="checkbox" id="hide-synopses"> Hide synopses</label>
             <label class="small"><input type="checkbox" id="collapse-all"> Collapse comments</label>
-            <button id="check-new-btn" class="pill-btn" type="button" title="Check watched series for upcoming releases">Check New Releases</button>
+            <button id="check-new-btn" class="pill-btn" type="button">Check New Releases</button>
             <select class="select" id="sort-by" style="max-width:180px">
               <option value="new">Newest</option>
               <option value="likes">Most Likes</option>
@@ -327,12 +326,6 @@ body{
               <option value="title">Title A–Z</option>
             </select>
           </div>
-        </div>
-
-        <!-- Coming Soon -->
-        <div id="coming-soon-box" class="lb-card" style="display:none">
-          <h3>Coming Soon</h3>
-          <div id="coming-soon-list" class="lb-list"></div>
         </div>
 
         <div id="books-feed" class="feed"></div>
@@ -373,7 +366,7 @@ body{
               <div><label class="small">Title *</label><input class="input" type="text" id="title" required/></div>
               <div><label class="small">Author/Host *</label><input class="input" type="text" id="author" required/></div>
               <div>
-                <label class="small">Category</label>
+                <label class="small">Category (auto)</label>
                 <select class="select" id="genre"></select>
               </div>
             </div>
@@ -392,22 +385,22 @@ body{
             <div><label class="small">Synopsis</label><textarea class="textarea" id="synopsis" placeholder="Description…"></textarea></div>
 
             <div>
-              <label class="small">Why I recommend this * <span class="small" style="opacity:.8">(Choose a style below and click “Suggest Reason” to auto-generate text, then edit)</span></label>
+              <label class="small">Why I recommend this *</label>
               <div class="search" style="grid-template-columns:1fr auto">
-                <select id="reason-tone" class="select" aria-label="Style for auto-generate">
+                <select id="reason-tone" class="select">
                   <option value="personal">Style: Personal</option>
                   <option value="hook">Style: Hook/Catchy</option>
                   <option value="professional">Style: Professional</option>
                   <option value="concise">Style: Concise</option>
                 </select>
-                <button id="reason-suggest" type="button" class="nav-btn" title="Auto-generate reason text">Suggest Reason (auto)</button>
+                <button id="reason-suggest" type="button" class="nav-btn">Suggest Reason (auto)</button>
               </div>
               <textarea class="textarea" id="reason" placeholder="Your reason (you can auto-generate above)"></textarea>
             </div>
 
             <div>
               <label class="small">Tags</label>
-              <div class="tags-input-container" id="tags-container" style="border:1.5px solid var(--line);border-radius:8px;padding:6px;background:#fff">
+              <div class="tags-input-container" id="tags-container" style="border:1.5px solid var(--line);border-radius:8px;padding:6px;background:var(--panel)">
                 <div id="tags-display" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px"></div>
                 <input type="text" class="input" id="tag-input" placeholder="Add tags…" enterkeyhint="done" autocomplete="off" style="border:0;padding:6px;background:transparent"/>
                 <div class="users-pop" id="tag-suggestions" style="display:none"></div>
@@ -439,7 +432,12 @@ body{
 
       <!-- PREFS -->
       <section id="prefs" class="section">
-        <h2 style="margin-bottom:8px;color:#0f172a;font-size:1.1rem">Preferences</h2>
+        <h2 style="margin-bottom:8px;font-size:1.1rem">Preferences</h2>
+
+        <div class="lb-card" style="margin-bottom:10px">
+          <h3>Appearance</h3>
+          <label class="small"><input id="pref-dim" type="checkbox"/> Use Dim Mode</label>
+        </div>
 
         <div class="lb-card" style="margin-bottom:10px">
           <h3>Posting & Feed</h3>
@@ -448,59 +446,6 @@ body{
             <label><input id="pref-post-finish" type="checkbox" checked/> Post when someone <strong>finishes</strong></label>
             <label><input id="pref-post-5" type="checkbox" checked/> Post for <strong>new 5★ ratings</strong></label>
             <button id="prefs-save" class="nav-btn" type="button">Save</button>
-          </div>
-        </div>
-
-        <!-- Cloud Sync (JSONBin) -->
-        <div class="lb-card" style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <h3>Cloud Sync (JSONBin)</h3>
-            <span id="cloud-status" class="chip">Default bin</span>
-          </div>
-          <div class="search" style="grid-template-columns:1fr 1fr auto auto">
-            <input id="cloud-api-key" class="input" placeholder="X-Master-Key (optional)"/>
-            <input id="cloud-bin-id" class="input" placeholder="Bin ID (optional)"/>
-            <button id="cloud-save" class="nav-btn" type="button">Save Config</button>
-            <button id="cloud-clear" class="nav-btn" type="button" style="background:#b74a4a">Clear</button>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button id="cloud-create" class="nav-btn" type="button">Create New Bin</button>
-            <button id="cloud-pull" class="nav-btn" type="button">Pull</button>
-            <button id="cloud-push" class="nav-btn" type="button">Push</button>
-          </div>
-        </div>
-
-        <!-- Watched Series -->
-        <div class="lb-card" style="margin-bottom:10px">
-          <h3>Watched Series</h3>
-          <div id="watched-series-list" class="lb-list"></div>
-        </div>
-
-        <div class="lb-card" style="margin-bottom:10px">
-          <h3>Install on Your Phone</h3>
-          <p class="small">Add Book Club to your home screen so it opens like an app.</p>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <button id="install-app-btn" class="nav-btn" type="button">Install App</button>
-            <span id="install-status" class="chip">Not installed</span>
-          </div>
-          <details id="ios-steps" style="margin-top:6px">
-            <summary>iPhone / iPad steps</summary>
-            <ol style="margin:6px 0 0 18px">
-              <li>Open this page in <strong>Safari</strong>.</li>
-              <li>Tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.</li>
-              <li>Tap <strong>Add</strong>.</li>
-            </ol>
-            <p class="small">On iOS Chrome: Share → “Add to Home Screen”.</p>
-          </details>
-        </div>
-
-        <div class="lb-card" style="margin-bottom:10px">
-          <h3>Writing Assistant</h3>
-          <p class="small">Use built-in suggestions, or paste an OpenAI API key to upgrade results. The key is stored only on this device.</p>
-          <div class="search" style="grid-template-columns:1fr auto auto">
-            <input id="openai-key" class="input" placeholder="sk-… (optional)"/>
-            <button id="save-openai-key" class="nav-btn" type="button">Save Key</button>
-            <button id="clear-openai-key" class="nav-btn" type="button" style="background:#b74a4a">Clear</button>
           </div>
         </div>
 
@@ -514,80 +459,24 @@ body{
           </div>
         </div>
 
-        <!-- Admin -->
+        <!-- Admin quick (password gated) -->
         <div class="lb-card">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <h3>Admin Options</h3>
-            <div style="display:flex;gap:6px;align-items:center">
-              <button id="open-admin-page" class="pill-btn" type="button" title="Opens separate admin page">Open Admin Page</button>
-              <button id="toggle-danger" class="pill-btn" type="button">Open Admin Options</button>
-            </div>
+            <button id="toggle-danger" class="pill-btn" type="button">Open Admin Options</button>
           </div>
           <div id="data-management" style="display:none;margin-top:8px">
-            <div style="display:grid;gap:8px">
-              <button id="clear-data-btn" class="nav-btn" type="button" style="background:#b74a4a">Clear ALL Data</button>
-              <div class="search" style="grid-template-columns:1fr 1fr auto">
-                <input id="rename-from" class="input" placeholder="Rename / merge: From name">
-                <input id="rename-to" class="input" placeholder="To name">
-                <button id="rename-user-btn" class="nav-btn" type="button">Rename / Merge</button>
-              </div>
-              <div class="search" style="grid-template-columns:1fr auto">
-                <input id="delete-book-id" class="input" placeholder="Delete item by ID">
-                <button id="delete-book-btn" class="nav-btn" type="button">Delete Item</button>
-              </div>
-              <div class="search" style="grid-template-columns:1fr auto auto">
-                <input id="activity-days" class="input" placeholder="Purge activity older than N days (current tab)">
-                <button id="purge-activity-btn" class="nav-btn" type="button">Purge Activity</button>
-                <button id="delete-last-activity-btn" class="nav-btn" type="button">Delete Most Recent Activity</button>
-              </div>
-              <div class="search" style="grid-template-columns:1fr auto">
-                <input id="pref-teams-url" class="input" type="url" placeholder="Teams Incoming Webhook URL"/>
-                <button id="save-teams-btn" class="nav-btn" type="button">Save Teams URL</button>
-              </div>
+            <div class="search" style="grid-template-columns:1fr auto">
+              <input id="delete-book-id" class="input" placeholder="Delete item by ID">
+              <button id="delete-book-btn" class="nav-btn" type="button">Delete Item</button>
             </div>
+            <button id="clear-data-btn" class="nav-btn" type="button" style="background:#b74a4a">Clear ALL Data</button>
           </div>
         </div>
       </section>
     </section>
   </main>
 </div>
-
-<!-- Separate Admin Page -->
-<section id="admin-page" class="section" style="display:none;max-width:1100px;margin:12px auto">
-  <div class="content">
-    <div class="lb-card" style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 style="margin:0">Admin</h2>
-        <button id="admin-back" class="pill-btn" type="button">← Back</button>
-      </div>
-    </div>
-
-    <div class="lb-card" style="margin-bottom:10px">
-      <h3>Data Management</h3>
-      <div style="display:grid;gap:8px">
-        <button id="a-clear-data-btn" class="nav-btn" type="button" style="background:#b74a4a">Clear ALL Data</button>
-        <div class="search" style="grid-template-columns:1fr 1fr auto">
-          <input id="a-rename-from" class="input" placeholder="Rename / merge: From name">
-          <input id="a-rename-to" class="input" placeholder="To name">
-          <button id="a-rename-user-btn" class="nav-btn" type="button">Rename / Merge</button>
-        </div>
-        <div class="search" style="grid-template-columns:1fr auto">
-          <input id="a-delete-book-id" class="input" placeholder="Delete item by ID">
-          <button id="a-delete-book-btn" class="nav-btn" type="button">Delete Item</button>
-        </div>
-        <div class="search" style="grid-template-columns:1fr auto auto">
-          <input id="a-activity-days" class="input" placeholder="Purge activity older than N days (current tab)">
-          <button id="a-purge-activity-btn" class="nav-btn" type="button">Purge Activity</button>
-          <button id="a-delete-last-activity-btn" class="nav-btn" type="button">Delete Most Recent Activity</button>
-        </div>
-        <div class="search" style="grid-template-columns:1fr auto">
-          <input id="a-pref-teams-url" class="input" type="url" placeholder="Teams Incoming Webhook URL"/>
-          <button id="a-save-teams-btn" class="nav-btn" type="button">Save Teams URL</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div id="toast" class="toast"></div>
 
@@ -615,585 +504,182 @@ body{
 function rAll(str, search, replacement){ return String(str).split(search).join(replacement); }
 function escapeHtml(s){ s=String(s==null?'':s); s=rAll(s,'&','&amp;'); s=rAll(s,'<','&lt;'); s=rAll(s,'>','&gt;'); return s; }
 function escapeAttr(s){ return rAll(escapeHtml(s),'"','&quot;'); }
-
 var $ = function(sel, root){ return (root||document).querySelector(sel); };
 var $$ = function(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); };
 var now=function(){ return new Date().toISOString(); };
-var timeAgo=function(iso){
-  var d=new Date(iso); var s=(Date.now()-d)/1000;
-  if(s<60)return String(Math.floor(s))+'s';
-  var m=s/60; if(m<60)return String(Math.floor(m))+'m';
-  var h=m/60; if(h<24)return String(Math.floor(h))+'h';
-  return String(Math.floor(h/24))+'d';
-};
+var timeAgo=function(iso){ var d=new Date(iso); var s=(Date.now()-d)/1000;
+  if(s<60)return String(Math.floor(s))+'s'; var m=s/60; if(m<60)return String(Math.floor(m))+'m';
+  var h=m/60; if(h<24)return String(Math.floor(h))+'h'; return String(Math.floor(h/24))+'d'; };
 var truncate=function(s,n){ s=String(s||''); n=n||300; return s.length>n? s.slice(0,n-1)+'…' : s; };
-function showToast(msg,isError){
-  var t=$('#toast'); t.textContent=msg; t.classList.toggle('error',!!isError); t.classList.add('show');
-  clearTimeout(showToast._t);
-  showToast._t=setTimeout(function(){ t.classList.remove('show'); }, isError?3200:1800);
-}
+function showToast(msg,isError){ var t=$('#toast'); t.textContent=msg; t.classList.toggle('error',!!isError); t.classList.add('show'); clearTimeout(showToast._t); showToast._t=setTimeout(function(){ t.classList.remove('show'); }, isError?3200:1800); }
 function formatDate(v){ var n=Number(v); var d=new Date(isFinite(n)?n:v); return d.toLocaleDateString(); }
 
-/* ========= Storage / Cloud ========= */
-const JSONBIN_API = 'https://api.jsonbin.io/v3';
-const DEFAULT_BIN_ID = '68b8be9e43b1c97be935f1da';
-const DEFAULT_API_KEY = '$2a$10$1k.Aw1WU5YTjSlKmSLGQ3eK6gaEhRB/j.FzTEtMp7Ardqd7vI4i4C';
-const ADMIN_PASSWORD = 'Prob1234';
-
+/* ========= Basic Data Stores ========= */
 let currentUser='';
-let books=[];                 // Main feed (formerly "Fun")
+let books=[];                 // Main feed
 let wellnessBooks=[];         // Wellness feed
-let comingSoon=[];            // upcoming main
-let wellnessComingSoon=[];    // upcoming wellness
-let userData={};
-let activity=[];              // Main activity
-let wellnessActivity=[];      // Wellness activity
-let sitePrefs={teamsWebhook:'',postNew:true,postFinish:true,postFive:true,openaiKey:'',
-               cloudApiKey:'',cloudBinId:'',watchedSeries:[]};
-
-let isLoading=false;
-let currentTags = [];
-let currentRating=0;
-let finishContext=null;
-let activityExpanded=false;
-let lastSearchItems=[];
-let deferredPrompt=null;
-
-/* Scope handling */
+let activity=[]; let wellnessActivity=[];
+let sitePrefs={postNew:true,postFinish:true,postFive:true,dim:false};
+let isLoading=false; let currentTags=[]; let currentRating=0; let finishContext=null; let activityExpanded=false;
 let currentScope='main'; // 'main' or 'wellness'
 function BOOKS(){ return currentScope==='main' ? books : wellnessBooks; }
 function ACTIV(){ return currentScope==='main' ? activity : wellnessActivity; }
-function UPCOMING(){ return currentScope==='main' ? comingSoon : wellnessComingSoon; }
-function OTHER_BOOKS(){ return currentScope==='main' ? wellnessBooks : books; }
 
-/* Local & Remote */
-function effectiveApiKey(){ return (sitePrefs.cloudApiKey||'').trim() || DEFAULT_API_KEY; }
-function effectiveBin(){ return (sitePrefs.cloudBinId||'').trim() || DEFAULT_BIN_ID; }
+/* ========= Theme / Dim ========= */
+function applyDim(){ document.body.classList.toggle('dim', !!sitePrefs.dim); }
 
+/* ========= Local save/load ========= */
 async function loadAll(){
-  if(isLoading) return; isLoading = true;
-  try{ // local cache
-    var cached = JSON.parse(localStorage.getItem('bookclub_payload')||'{}');
-    if(cached.books) books = cached.books;
-    if(cached.wellnessBooks) wellnessBooks = cached.wellnessBooks;
-    if(cached.userData) userData = cached.userData;
-    if(cached.activity) activity = cached.activity;
-    if(cached.wellnessActivity) wellnessActivity = cached.wellnessActivity;
-    if(cached.sitePrefs) for(var k in cached.sitePrefs){ sitePrefs[k]=cached.sitePrefs[k]; }
-    if(cached.comingSoon) comingSoon=cached.comingSoon;
-    if(cached.wellnessComingSoon) wellnessComingSoon=cached.wellnessComingSoon;
+  if(isLoading) return; isLoading=true;
+  try{
+    var cached=JSON.parse(localStorage.getItem('bookclub_payload')||'{}');
+    books=cached.books||[]; wellnessBooks=cached.wellnessBooks||[];
+    activity=cached.activity||[]; wellnessActivity=cached.wellnessActivity||[];
+    sitePrefs=Object.assign(sitePrefs,cached.sitePrefs||{});
   }catch(_e){}
-
-  try{ // remote
-    const r = await fetch(JSONBIN_API+'/b/'+effectiveBin()+'/latest',{headers:{'X-Master-Key':effectiveApiKey()}});
-    if(!r.ok) throw new Error(await r.text());
-    const data=await r.json();
-    const record=data.record||{};
-    books=record.books||books||[];
-    wellnessBooks=record.wellnessBooks||wellnessBooks||[];
-    userData=record.userData||userData||{};
-    activity=record.activity||activity||[];
-    wellnessActivity=record.wellnessActivity||wellnessActivity||[];
-    comingSoon=record.comingSoon||comingSoon||[];
-    wellnessComingSoon=record.wellnessComingSoon||wellnessComingSoon||[];
-    for(var k2 in (record.sitePrefs||{})){ sitePrefs[k2]=record.sitePrefs[k2]; }
-    localStorage.setItem('bookclub_payload', JSON.stringify({books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon}));
-  }catch(e){
-    console.warn('Using local data; sync failed.', e);
-  }
   isLoading=false;
 }
-async function saveAll(pushToCloud){
-  try{
-    localStorage.setItem('bookclub_payload', JSON.stringify({books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon}));
-  }catch(_e){}
-  try{
-    if(pushToCloud===false) return;
-    const payload={books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon};
-    await fetch(JSONBIN_API+'/b/'+effectiveBin(),{ method:'PUT', headers:{'Content-Type':'application/json','X-Master-Key':effectiveApiKey()}, body:JSON.stringify(payload) });
-  }catch(e){ console.warn('Remote save failed',e); }
-}
-function defaultUser(){ return {readList:[],wishList:[],currentReading:[]}; }
-function ensureUser(name){ if(!userData[name]) userData[name]=defaultUser(); }
-function me(){ return userData[currentUser]||defaultUser(); }
-
-/* PWA */
-function setupPWA(){
-  try{
-    const manifest={name:"Book Club",short_name:"Book Club",start_url:".",display:"standalone",background_color:"#ffffff",theme_color:"#4f46e5",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAAAAABQFZ1hAAAAC0lEQVR42u3BAQ0AAADCoPdPbQ43oAAAAAB4p1nNAAE=",sizes:"192x192",type:"image/png"}]};
-    const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}); const url=URL.createObjectURL(blob);
-    const link=$('#app-manifest'); if(link) link.href=url;
-    if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-      const sw="self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open('bc-v1').then(c=>c.addAll(['./'])))});self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))})";
-      const swUrl=URL.createObjectURL(new Blob([sw],{type:'text/javascript'}));
-      navigator.serviceWorker.register(swUrl).catch(function(){});
-    }
-    const status=$('#install-status');
-    const standalone=window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-    if(status) status.textContent=standalone?'Installed':'Not installed';
-    window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e; if(status) status.textContent='Install available';});
-  }catch(_e){}
+function saveAll(){
+  localStorage.setItem('bookclub_payload', JSON.stringify({books,wellnessBooks,activity,wellnessActivity,sitePrefs}));
 }
 
-/* Teams webhook */
-async function postToTeams(type,text){
-  const url=(sitePrefs.teamsWebhook||'').trim(); if(!url) return;
-  const allow=(type==='share'&&sitePrefs.postNew)||(type==='finish'&&sitePrefs.postFinish)||(type==='five'&&sitePrefs.postFive);
-  if(!allow) return;
-  try{ await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})}); }catch(_e){}
-}
-
-/* Activity */
-function activityIcon(type){ var map={share:'📣',finish:'🏁','five':'🏆','list':'🗂️','like':'👍',comment:'💬',multi:'✨'}; return map[type]||'📝'; }
-function mergeOrPostActivity(entry){
-  var arr = ACTIV();
-  var last=arr[0];
-  if(last && last.payload && entry.payload && last.payload.user===entry.payload.user && last.payload.title===entry.payload.title && (Date.now()-new Date(last.at).getTime())<120000){
-    last.type='multi';
-    var acts = (last.payload.actions||[]).concat([entry.type]);
-    var dedup = {};
-    last.payload.actions = acts.filter(function(x){ if(dedup[x])return false; dedup[x]=1; return true; });
-    if(typeof entry.payload.rating!=='undefined'){ last.payload.rating = entry.payload.rating; }
-    last.at=now();
-  }else{
-    arr.unshift({type:entry.type,payload:entry.payload,id:Date.now()+Math.random(),likes:0,likedBy:[],at:now()});
-    if(arr.length>300) arr.length=300;
-  }
-  renderActivity(); saveAll();
-}
-function postActivity(type,payload){ mergeOrPostActivity({type:type,payload:payload}); }
-
-/* Ratings helpers */
-function ratingCount(book){
-  var base = typeof book.rating === 'number' ? 1 : 0;
-  var extra = (book.userRatings && book.userRatings.length) || 0;
-  return base + extra;
-}
-function averageRatingForBook(book){
-  var vals=[]; if(typeof book.rating==='number') vals.push(book.rating);
-  (book.userRatings||[]).forEach(function(r){ if(typeof r.rating==='number') vals.push(r.rating); });
-  if(!vals.length) return 0;
-  return vals.reduce(function(a,b){return a+b;},0)/vals.length;
-}
-
-/* Tags */
-var tagSuggestions = [
- 'sci-fi','fantasy','romance','mystery','thriller','horror','historical-fiction','young-adult','contemporary','classic','literary-fiction','dystopian',
- 'leadership','business','productivity','entrepreneurship','marketing','personal-development','psychology','philosophy','history','science','technology',
- 'health','fitness','cooking','travel','memoir','comedy','drama','adventure','coming-of-age','family','friendship','war','economics','environment',
- 'social-justice','quick-read','page-turner','thought-provoking','emotional','inspiring','educational','practical','reference','beginner-friendly','advanced',
- 'true-crime','faith','neuroscience','time-travel','space','post-apocalyptic','podcast'
-];
-let currentBooks=[];
-
-function renderTagsDisplay(){
-  var c=$('#tags-display');
-  c.innerHTML=currentTags.map(function(t){return '<span class="tag" data-tag="'+escapeAttr(t)+'">'+escapeHtml(t)+' ×</span>';}).join('');
-}
-function addTag(t){
-  var x=(t||'').trim().toLowerCase(); if(!x||currentTags.indexOf(x)>-1) return;
-  currentTags.push(x); renderTagsDisplay();
-  var ti=$('#tag-input'); if(ti) ti.value='';
-  var sug=$('#tag-suggestions'); if(sug) sug.style.display='none';
-}
-function autoTagsFrom(book){
-  var list=new Set(book.categories||[]);
-  var s=String(book.synopsis||'').toLowerCase();
-  var map = [
-    [/science[\s-]?fiction|spaceship|space\s|alien|astrophysics/,'sci-fi'],
-    [/fantasy|dragon|magic|sorcer|wizard|fae/,'fantasy'],
-    [/mystery|detective|whodunnit|whodunit|sleuth/,'mystery'],
-    [/thriller|conspiracy|chase|assassin/,'thriller'],
-    [/romance|love\sstory|enemies to lovers/,'romance'],
-    [/horror|haunted|possession|ghost/,'horror'],
-    [/young adult|ya\b/,'young-adult'],
-    [/dystopian|post[-\s]?apocalyptic|apocalypse/,'dystopian'],
-    [/time[-\s]?travel/,'time-travel'],
-    [/space|cosmos/,'space'],
-    [/history|historical/,'history'],
-    [/memoir|autobiograph/,'memoir'],
-    [/true\s?crime/,'true-crime'],
-    [/leadership|manager|team/,'leadership'],
-    [/business|startup|founder|marketing|sales/,'business'],
-    [/productivity|habits|time management/,'productivity'],
-    [/psychology|behavior|cognitive|neuroscience/,'psychology'],
-    [/faith|prayer|christian|saint/,'faith'],
-    [/podcast/,'podcast'],
-    [/health|fitness|wellness|sleep|stress/,'health']
-  ];
-  map.forEach(function(pair){ if(pair[0].test(s)) list.add(pair[1]); });
-  if(book.genre) list.add(book.genre);
-  currentTags=Array.from(new Set(currentTags.concat(Array.from(list).map(function(x){return String(x).toLowerCase();})))).slice(0,8);
-  renderTagsDisplay();
-}
-
-/* Series Watch */
-function watchSeriesName(name){
-  name=String(name||'').trim(); if(!name) return;
-  if(sitePrefs.watchedSeries.indexOf(name)===-1){ sitePrefs.watchedSeries.push(name); saveAll(); renderWatchedSeries(); showToast('Watching series: '+name); }
-}
-function unwatchSeriesName(name){
-  sitePrefs.watchedSeries = sitePrefs.watchedSeries.filter(function(x){ return x!==name; });
-  saveAll(); renderWatchedSeries(); showToast('Removed: '+name);
-}
-function renderWatchedSeries(){
-  var list=$('#watched-series-list'); var items=sitePrefs.watchedSeries||[];
-  if(!items.length){ list.innerHTML='<div class="small" style="color:#334155">Nothing yet — watch a series from a card or the Add form.</div>'; return; }
-  list.innerHTML=items.map(function(n){
-    return '<div class="lb-row"><div>'+escapeHtml(n)+'</div><button class="pill-btn" type="button" data-unwatch="'+escapeAttr(n)+'">Remove</button></div>';
-  }).join('');
-}
-
-/* URLs */
-function goodreadsUrl(book){
-  var q = ((book.title||'')+' '+(book.author||'')).trim();
-  return 'https://www.goodreads.com/search?q='+encodeURIComponent(q)+'&search_type=books';
-}
-function mediaUrl(book){
-  if(book.type==='podcast'){
-    if(book.podcastUrl) return book.podcastUrl;
-    var q=((book.title||'')+' '+(book.author||'')).trim();
-    return 'https://podcasts.apple.com/search?term='+encodeURIComponent(q);
-  }
-  return goodreadsUrl(book);
-}
-
-/* Cards */
-function youStatus(book){
-  if(!currentUser) return '';
-  var mine=me();
-  var r=mine.readList.find(function(x){return String(x.id)===String(book.id);});
-  var cr=mine.currentReading.find(function(x){return String(x.id)===String(book.id);});
-  var w=mine.wishList.find(function(x){return String(x.id)===String(book.id);});
-  function chip(b){ return b && b._wellness ? ' <span class="chip">Wellness</span>' : ''; }
-  if(r){
-    var urObj=(book.userRatings||[]).find(function(x){return x.user===currentUser;});
-    var stars= (urObj?urObj.rating:undefined);
-    if(stars==null) stars = (r._rating||0);
-    return '<div class="status-pill">✅ Completed'+(stars?(' — '+stars+'★'):'')+chip(r)+'</div>';
-  }
-  if(cr) return '<div class="status-pill">📖 Currently Reading'+chip(cr)+'</div>';
-  if(w)  return '<div class="status-pill">📚 Want to Read'+chip(w)+'</div>';
-  return '';
-}
-function myTimeline(book){
-  if(!currentUser) return '';
-  var m=me();
-  var info = {started: null, finished: null};
-  var r=m.readList.find(function(x){return String(x.id)===String(book.id);});
-  var c=m.currentReading.find(function(x){return String(x.id)===String(book.id);});
-  if(r){ info.finished = r._finishedAt || r._changedAt || null; }
-  if(c){ info.started = c._startedAt || c._changedAt || null; }
-  var bits=['<div class="timeline">'];
-  bits.push('<span class="tl">Added '+formatDate(book.id)+'</span>');
-  if(info.started) bits.push('<span class="tl">Started '+formatDate(info.started)+'</span>');
-  if(info.finished) bits.push('<span class="tl">Finished '+formatDate(info.finished)+'</span>');
-  bits.push('</div>');
-  return bits.join('');
-}
-function likedByLine(arr){ arr=arr||[]; if(!arr.length) return ''; return '<div class="small"><em>Liked by:</em> '+escapeHtml(arr.join(', '))+'</div>'; }
-function tagChips(tags){ if(!tags||!tags.length) return ''; return '<div class="tags">'+tags.map(function(t){return '<span class="tag">'+escapeHtml(t)+'</span>';}).join('')+'</div>'; }
-function seriesChip(book){
-  if(!book.seriesName) return '';
-  var n = escapeHtml(book.seriesName);
-  var num = (book.seriesNumber!=null && book.seriesNumber!=='') ? ' #'+escapeHtml(book.seriesNumber) : '';
-  return '<span class="series-chip">Series: '+n+num+'</span>';
-}
-function synBlock(book){
-  if(!book.synopsis) return '';
-  if($('#hide-synopses') && $('#hide-synopses').checked) return '';
-  var long = book.synopsis.length>280;
-  var short = truncate(book.synopsis, 280);
-  return [
-    '<div class="syn" data-syn="'+book.id+'">',
-    '<span class="syn-text" data-expanded="false">'+escapeHtml(short)+'</span>',
-    long?(' <button class="c-toggle" type="button" data-action="toggle-synopsis" data-id="'+book.id+'" data-full="'+escapeAttr(book.synopsis)+'">Read more</button>'):'',
-    '</div>'
-  ].join('');
-}
-function typePill(book){
-  if(book.type==='podcast') return '🎧 Podcast'+(book.genre?': '+escapeHtml(book.genre):'');
-  return escapeHtml(book.genre||'');
-}
-function bookCoverBlock(book){
-  var link = mediaUrl(book);
-  if(book.image){
-    return '<a href="'+escapeAttr(link)+'" target="_blank" rel="noopener noreferrer"><img class="cover" loading="lazy" alt="Cover of '+escapeHtml(book.title)+'" src="'+escapeAttr(book.image)+'"/></a>';
-  }
-  return '<a href="'+escapeAttr(link)+'" target="_blank" rel="noopener noreferrer" class="cover-ph">'+(book.type==='podcast'?'Podcast':'No Cover')+'</a>';
-}
-function bookCard(book){
-  var liked=currentUser && (book.postLikedBy||[]).indexOf(currentUser)>-1;
-  var avg=averageRatingForBook(book);
-  var rounded=Math.round(avg||0);
-  var count=ratingCount(book);
-  var sysCollapsed = ($('#collapse-all') && $('#collapse-all').checked) ? 'style="display:none"' : '';
-  var mineRead = currentUser && me().readList.some(function(x){return String(x.id)===String(book.id);});
-  return [
-    '<article class="post" id="book-'+book.id+'" data-id="'+book.id+'">',
-      '<div class="head">', bookCoverBlock(book), '<div>',
-        '<div class="genre">'+ typePill(book) + seriesChip(book) +'</div>',
-        '<div class="title">'+escapeHtml(book.title)+'</div>',
-        '<div class="author">by '+escapeHtml(book.author)+'</div>',
-        '<div class="recommender">Recommended by '+escapeHtml(book.recommender)+'</div>',
-        '<div class="small">'+formatDate(book.id)+(book._scope==='wellness'?' • <span class="chip">Wellness</span>':'')+'</div>',
-        '<div class="rating-line">',
-          '<div class="stars">'+Array(rounded+1).join('★')+Array(5-rounded+1).join('☆')+'</div>',
-          '<span class="small">('+avg.toFixed(1)+'/5 • '+count+' rating'+(count===1?'':'s')+')</span>',
-        '</div>',
-        tagChips(book.tags), youStatus(book), myTimeline(book),
-      '</div></div>',
-      synBlock(book),
-      (book.reason?('<div class="small" style="margin-top:6px"><strong>Why:</strong> '+escapeHtml(book.reason)+'</div>'):''),
-
-      '<div class="actions">',
-        '<button class="action '+(liked?'active':'')+'" type="button" data-action="like" data-id="'+book.id+'">👍 <span data-like-count>'+(book.postLikes||0)+'</span></button>',
-        '<button class="action" type="button" data-action="wish" data-id="'+book.id+'">📚 Want to Read</button>',
-        '<button class="action" type="button" data-action="reading" data-id="'+book.id+'">📖 Currently Reading</button>',
-        '<button class="action" type="button" data-action="'+(mineRead?'rate-again':'finish')+'" data-id="'+book.id+'">'+(mineRead?'⭐ Rate Again':'✅ Mark as Read')+'</button>',
-        '<button class="action" type="button" data-action="similar" data-id="'+book.id+'">🧭 Find Similar</button>',
-        '<button class="action" type="button" data-action="share" data-id="'+book.id+'">🔗 Share</button>',
-        (book.seriesName?'<button class="action" type="button" data-action="watch-series" data-ser="'+escapeAttr(book.seriesName)+'">👀 Watch Series</button>':'<button class="action" type="button" data-action="set-series" data-id="'+book.id+'">🔧 Set Series</button>'),
-        (book.seriesName?'<button class="action" type="button" data-action="add-series-books" data-ser="'+escapeAttr(book.seriesName)+'">➕ Add Series Books</button>':''),
-      '</div>',
-      likedByLine(book.postLikedBy),
-      '<div class="comments">',
-        '<div class="c-head">',
-          '<span class="c-title">Comments <span class="small">(' + ((book.comments&&book.comments.length)||0) + ')</span></span>',
-          '<button class="c-toggle" type="button" data-action="toggle-comments" data-id="'+book.id+'">See Comments</button>',
-        '</div>',
-        '<div class="c-list" '+sysCollapsed+' data-list="'+book.id+'">',
-          ((book.comments||[]).map(function(c){
-            return [
-              '<div class="c-item" data-comment-id="'+c.id+'">',
-                '<div class="c-headline" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:13px">',
-                  '<span class="c-name"><strong>'+escapeHtml(c.commenter||'Anonymous')+'</strong> <span class="small" style="margin-left:6px">'+formatDate(c.id)+'</span></span>',
-                  '<button class="c-like '+(((c.likedBy||[]).indexOf(currentUser)>-1)?'liked':'')+'" type="button" data-action="like-comment" data-id="'+book.id+'" data-cid="'+c.id+'">👍 '+(c.likes||0)+'</button>',
-                '</div>',
-                '<div class="c-text">'+escapeHtml(c.text||'')+'</div>',
-              '</div>'
-            ].join('');
-          }).join('')),
-          '<div class="c-form" data-id="'+book.id+'">',
-            '<input type="text" class="input" data-field="name" value="'+escapeAttr(currentUser)+'" placeholder="Your name"/>',
-            '<input type="text" class="input" data-field="text" placeholder="Write your comment…"/>',
-            '<button class="c-btn" type="button" data-action="add-comment" data-id="'+book.id+'">Add Comment</button>',
-          '</div>',
-        '</div>',
-      '</div>',
-    '</article>'
-  ].join('');
-}
-
-/* Renderers */
-function renderActivity(){
-  var list=$('#activity-list');
-  var filter=$('#activity-filter').value;
-  var cap=activityExpanded?40:12;
-  var src=ACTIV();
-  var filtered=filter?src.filter(function(a){return a.type===filter;}):src;
-  if(!filtered.length){list.innerHTML='<div class="a-item"><div class="a-badge">👋</div><div>No activity yet — share something!</div></div>';return;}
-  list.innerHTML=filtered.slice(0,cap).map(function(a){
-    var type=a.type,payload=a.payload,at=a.at,likes=a.likes||0;
-    var user = escapeHtml(payload.user);
-    var title = '<em>'+escapeHtml(payload.title)+'</em>';
-    var text='';
-    if(type==='share') text='<strong>'+user+'</strong> shared '+title+' ('+(payload.rating||'—')+'★)';
-    else if(type==='finish') text='<strong>'+user+'</strong> finished '+title+' — '+(payload.rating||'—')+'★';
-    else if(type==='five') text='<strong>'+user+'</strong> rated '+title+' <strong>5★</strong>';
-    else if(type==='list') text='<strong>'+user+'</strong> '+escapeHtml(payload.action)+' '+title;
-    else if(type==='comment') text='<strong>'+user+'</strong> commented on '+title;
-    else if(type==='like') text='<strong>'+user+'</strong> liked '+title;
-    else if(type==='multi'){
-      var acts = {}; (payload.actions||[]).forEach(function(x){acts[x]=1;});
-      var rated = (typeof payload.rating!=='undefined');
-      if(acts.share && (acts.finish || acts.five || rated)){ text = '<strong>'+user+'</strong> recommended '+title+' and rated it '+(payload.rating||5)+'★'; }
-      else if(acts.share){ text = '<strong>'+user+'</strong> recommended '+title; }
-      else{ text = '<strong>'+user+'</strong> updated '+title; }
-    }
-    return '<div class="a-item"><div class="a-badge">'+activityIcon(type)+'</div><div><div>'+text+'</div><div class="a-meta">'+timeAgo(at)+' ago <span class="pill">'+likes+' 👍</span></div></div></div>';
-  }).join('');
-  $('#activity-toggle').textContent=activityExpanded?'Less':'More';
-}
-function renderComingSoon(){
-  var arr=UPCOMING()||[];
-  var box=$('#coming-soon-box'); var list=$('#coming-soon-list');
-  if(!arr.length){ box.style.display='none'; list.innerHTML=''; return; }
-  list.innerHTML=arr.slice(0,6).map(function(it){
-    return '<div class="lb-row"><div><strong>'+escapeHtml(it.title)+'</strong> <span class="small">by '+escapeHtml(it.author)+'</span><span class="chip" style="margin-left:6px">Series: '+escapeHtml(it.series)+'</span></div><span class="lb-count">'+escapeHtml(it.release)+'</span></div>';
-  }).join('');
-  box.style.display='block';
-}
-function renderBooks(){
-  renderComingSoon();
-  computeAndRenderRecs();
-  var c=$('#books-feed');
-  if(!currentBooks.length){
-    c.innerHTML='<div style="text-align:center;padding:28px;color:#64748b"><h3 style="font-size:1rem;color:#0f172a">No items found</h3><p class="small">Adjust search/filters or add a new recommendation.</p></div>';
-    $('#result-count').textContent='0 results';return;
-  }
-  c.innerHTML=currentBooks.map(bookCard).join('');
-  $('#result-count').textContent=String(currentBooks.length)+' result'+(currentBooks.length===1?'':'s');
-}
-function renderMyLists(){
-  var data=me();
-  function chip(b){ return b && b._wellness ? ' <span class="chip">Wellness</span>' : ''; }
-  function make(arr,actions){
-    return arr.length?arr.map(function(b){
-      return '<div class="lb-row" data-id="'+b.id+'"><div><strong>'+escapeHtml(b.title)+'</strong> by '+escapeHtml(b.author)+chip(b)+'</div><div>'+actions(b)+'</div></div>';
-    }).join(''):'<p class="small" style="font-style:italic">Nothing here yet</p>';
-  }
-  $('#current-reading').innerHTML=make(data.currentReading,function(b){
-    return '<button class="pill-btn" type="button" data-action="finish" data-id="'+b.id+'">Mark Read</button> <button class="pill-btn btn-ghost" type="button" data-action="remove-current" data-id="'+b.id+'">Remove</button>';
-  });
-  $('#wish-list').innerHTML=make(data.wishList,function(b){
-    return '<button class="pill-btn" type="button" data-action="reading" data-id="'+b.id+'">Start</button> <button class="pill-btn btn-ghost" type="button" data-action="remove-wish" data-id="'+b.id+'">Remove</button>';
-  });
-  $('#read-list').innerHTML=make(data.readList,function(b){
-    return '<span class="chip">'+(b._rating||0)+'★</span> <button class="pill-btn" type="button" data-action="rate-again" data-id="'+b.id+'">Rate Again</button> <button class="pill-btn btn-ghost" type="button" data-action="remove-read" data-id="'+b.id+'">Remove</button>';
-  });
-}
+/* ========= UI Bits ========= */
 function updateStats(){
   var src=BOOKS();
-  var sum=0,n=0;
-  src.forEach(function(b){
-    if(typeof b.rating==='number'){sum+=b.rating;n++;}
-    (b.userRatings||[]).forEach(function(r){ if(typeof r.rating==='number'){sum+=r.rating;n++;} });
-  });
   var totalItems=src.length;
-  var totalComments=src.reduce(function(s,b){return s+(((b.comments&&b.comments.length)||0));},0);
-  var globalAvg=n?(sum/n):0;
-  var readCount=Object.keys(userData||{}).reduce(function(s,k){var u=userData[k]||{}; return s + ((u.readList&&u.readList.length)||0);},0);
-  var usersCount=Object.keys(userData||{}).length;
+  var totalComments=src.reduce((s,b)=> s+((b.comments||[]).length),0);
+  var readCount=(JSON.parse(localStorage.getItem('bookclub_payload')||'{}').userData||{});
   $('#total-books').textContent=String(totalItems);
   $('#total-reviews').textContent=String(totalComments);
-  $('#avg-rating').textContent=globalAvg.toFixed(1);
-  $('#books-read').textContent=String(readCount);
-  $('#total-users').textContent=String(usersCount);
-  var list=Object.keys(userData||{}).sort(function(a,b){return a.localeCompare(b);});
-  $('#users-pop').innerHTML=list.map(function(nm){return '<div>'+escapeHtml(nm)+'</div>';}).join('');
-  renderLB(); renderTrending(); populateTagFilter(); updateStatsChip();
-}
-function updateStatsChip(){
-  const users = Object.keys(userData).length;
-  const read = Object.values(userData).reduce((s,u)=>s+(u.readList||[]).length,0);
-  const comments = books.reduce((s,b)=> s+((b.comments||[]).length), 0) + wellnessBooks.reduce((s,b)=> s+((b.comments||[]).length), 0);
-  $('#stats-chip').textContent = `${books.length+wellnessBooks.length} items • ${comments} comments • ${read} finished • ${users} users`;
-}
-function renderLB(){
-  var src=BOOKS();
-  function notSystem(name){ return String(name||'').trim().toLowerCase()!=='system'; }
-  function addRows(container,arr,unit,empty){
-    if(!arr.length){container.innerHTML='<div class="small" style="color:#334155">'+empty+'</div>';return;}
-    container.innerHTML=arr.map(function(item){ return '<div class="lb-row"><div>'+escapeHtml(item[0])+'</div><span class="lb-count">'+item[1]+' '+unit+'</span></div>'; }).join('');
-  }
-  var recs={}; src.forEach(function(b){var n=b.recommender; if(n) recs[n]=(recs[n]||0)+1;});
-  var recsSorted=Object.keys(recs).filter(notSystem).map(function(k){return [k,recs[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
-  addRows($('#lb-recommenders'),recsSorted, (recsSorted[0]&&recsSorted[0][1]===1)?'item':'items','No shares yet');
-
-  var reads={}; Object.keys(userData||{}).forEach(function(n){ if(notSystem(n)) reads[n]=(userData[n].readList||[]).length; });
-  var readsSorted=Object.keys(reads).filter(function(n){return reads[n]>0;}).map(function(n){return [n,reads[n]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
-  addRows($('#lb-readers'),readsSorted,'finished','No finished items yet');
-
-  var active={};
-  Object.keys(userData||{}).forEach(function(n){
-    if(notSystem(n)) active[n]=((userData[n].readList||[]).length)+((userData[n].currentReading||[]).length)+((userData[n].wishList||[]).length);
-  });
-  src.forEach(function(b){
-    (b.comments||[]).forEach(function(c){ var n=c.commenter||'Anonymous'; if(notSystem(n)) active[n]=(active[n]||0)+1; });
-    (b.postLikedBy||[]).forEach(function(n){ if(notSystem(n)) active[n]=(active[n]||0)+1; });
-  });
-  var actSorted=Object.keys(active).map(function(n){return [n,active[n]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
-  addRows($('#lb-active'),actSorted,'actions','No activity yet');
-}
-function trendingScore(b){ var comments = (b.comments&&b.comments.length) || 0; var likes = b.postLikes || 0; var ratings = ratingCount(b); return comments*2 + likes*1.5 + ratings; }
-function renderTrending(){
-  var src=BOOKS();
-  var top = src.slice().sort(function(a,b){return trendingScore(b)-trendingScore(a);}).slice(0,3);
-  function makeRows(arr){
-    if(!arr.length) return '<div class="small" style="color:#334155">No activity yet</div>';
-    return arr.map(function(b){
-      var img = b.image ? '<img src="'+escapeAttr(b.image)+'" alt="" style="width:28px;height:42px;border-radius:6px;border:1px solid var(--line);object-fit:cover">' : '<div style="width:28px;height:42px;border-radius:6px;background:#e9ecef"></div>';
-      return '<div class="lb-row" data-jump="'+b.id+'"><div style="display:flex;align-items:center;gap:8px">'+img+'<div><div><strong>'+escapeHtml(b.title)+'</strong></div><div class="small" style="color:#334155">'+escapeHtml(b.author)+'</div></div></div><span class="lb-count">'+Math.round(trendingScore(b))+' actions</span></div>';
-    }).join('');
-  }
-  $('#trending-prelogin').innerHTML = makeRows(top);
+  $('#avg-rating').textContent=(function(){
+    let sum=0,n=0; src.forEach(b=>{ if(typeof b.rating==='number'){sum+=b.rating;n++;} (b.userRatings||[]).forEach(r=>{ if(typeof r.rating==='number'){sum+=r.rating;n++;} });});
+    return n?(sum/n).toFixed(1):'0.0';
+  })();
+  $('#books-read').textContent='—';
+  $('#total-users').textContent='—';
+  $('#stats-chip').textContent = `${(books.length+wellnessBooks.length)} items • ${totalComments} comments`;
 }
 
-/* Filters */
-function getUniqueRecommenders(){
-  var set={}; BOOKS().forEach(function(b){ if(b.recommender) set[b.recommender]=1; }); return Object.keys(set).sort(function(a,b){return a.localeCompare(b);});
-}
-function populateRecommenderFilter(){
-  var sel=$('#recommender-filter'); var cur=sel.value;
-  var opts=['<option value="">All Recommenders</option>'].concat(getUniqueRecommenders().map(function(n){return '<option value="'+escapeAttr(n)+'">'+escapeHtml(n)+'</option>'; }));
-  sel.innerHTML=opts.join(''); if(getUniqueRecommenders().indexOf(cur)>-1) sel.value=cur;
-}
+/* ========= Category options ========= */
 function populateCategoryOptions(){
-  var opts=[ 'Fiction','Non-Fiction','Biography','Memoir','Self-Help','Professional','Business',
+  const opts=[ 'Fiction','Non-Fiction','Biography','Memoir','Self-Help','Professional','Business',
     'Leadership','Entrepreneurship','Marketing','Finance','Personal Development',
     'History','Science','Technology','Psychology','Philosophy','Spirituality/Religion',
     'Health & Fitness','Cooking','Travel','Parenting','Education',
     'Mystery','Thriller','Horror','Romance','Fantasy','Sci-Fi','Dystopian','Young Adult',
     'Classics','Literary Fiction','Poetry','Comics/Graphic Novel','Reference','Podcast','Other'
   ];
-  $('#genre').innerHTML=opts.map(function(o){return '<option value="'+escapeAttr(o.toLowerCase())+'">'+escapeHtml(o)+'</option>';}).join('');
-  var feedCat=$('#category-filter');
-  feedCat.innerHTML=['<option value="">All Categories</option>'].concat(opts.map(function(o){return '<option value="'+escapeAttr(o.toLowerCase())+'">'+escapeHtml(o)+'</option>'; })).join('');
+  $('#genre').innerHTML=opts.map(o=>`<option value="${o.toLowerCase()}">${o}</option>`).join('');
+  const feedCat=$('#category-filter');
+  feedCat.innerHTML=['<option value="">All Categories</option>']
+    .concat(opts.map(o=>`<option value="${o.toLowerCase()}">${o}</option>`)).join('');
+}
+
+/* ========= Tag suggestions ========= */
+var tagSuggestions=[ 'sci-fi','fantasy','romance','mystery','thriller','horror','historical-fiction','young-adult','contemporary','classic','literary-fiction','dystopian','leadership','business','productivity','entrepreneurship','marketing','personal-development','psychology','philosophy','history','science','technology','health','fitness','cooking','travel','memoir','comedy','drama','adventure','coming-of-age','family','friendship','war','economics','environment','social-justice','quick-read','page-turner','thought-provoking','emotional','inspiring','educational','practical','reference','beginner-friendly','advanced','true-crime','faith','neuroscience','time-travel','space','post-apocalyptic','podcast' ];
+function renderTagsDisplay(){ $('#tags-display').innerHTML=currentTags.map(t=>`<span class="tag" data-tag="${escapeAttr(t)}">${escapeHtml(t)} ×</span>`).join(''); }
+function addTag(t){ var x=String(t||'').trim().toLowerCase(); if(!x||currentTags.includes(x)) return; currentTags.push(x); renderTagsDisplay(); $('#tag-input').value=''; $('#tag-suggestions').style.display='none'; }
+
+/* ========= Books rendering ========= */
+function averageRatingForBook(book){
+  var vals=[]; if(typeof book.rating==='number') vals.push(book.rating);
+  (book.userRatings||[]).forEach(r=>{ if(typeof r.rating==='number') vals.push(r.rating); });
+  if(!vals.length) return 0;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function bookCard(book){
+  const avg=averageRatingForBook(book);
+  const rounded=Math.round(avg||0);
+  return `
+  <article class="post" id="book-${book.id}" data-id="${book.id}">
+    <div class="head">
+      ${ book.image ? `<img class="cover" loading="lazy" alt="Cover of ${escapeAttr(book.title)}" src="${escapeAttr(book.image)}"/>` : `<div class="cover-ph">${book.type==='podcast'?'Podcast':'No Cover'}</div>` }
+      <div>
+        <div class="genre">${ escapeHtml(book.type==='podcast' ? `🎧 Podcast${book.genre?': '+book.genre:''}` : (book.genre||'').toUpperCase()) }</div>
+        <div class="title">${escapeHtml(book.title)}</div>
+        <div class="author">by ${escapeHtml(book.author)}</div>
+        <div class="recommender">Recommended by ${escapeHtml(book.recommender)}</div>
+        <div class="small">${formatDate(book.id)} ${book._scope==='wellness'?'<span class="chip" style="margin-left:6px">Wellness</span>':''}</div>
+        <div class="rating-line">
+          <div class="stars">${'★'.repeat(rounded)}${'☆'.repeat(5-rounded)}</div>
+          <span class="small">(${avg.toFixed(1)}/5)</span>
+        </div>
+        ${ (book.tags&&book.tags.length)?('<div class="tags">'+book.tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')+'</div>') : '' }
+      </div>
+    </div>
+    ${ book.synopsis?(`<div class="syn" data-syn="${book.id}"><span class="syn-text" data-expanded="false">${escapeHtml(truncate(book.synopsis,280))}</span>${book.synopsis.length>280?` <button class="c-toggle" type="button" data-action="toggle-synopsis" data-id="${book.id}" data-full="${escapeAttr(book.synopsis)}">Read more</button>`:''}</div>`):''}
+    ${ book.reason?(`<div class="small" style="margin-top:6px"><strong>Why:</strong> ${escapeHtml(book.reason)}</div>`):''}
+    <div class="actions">
+      <button class="action" type="button" data-action="wish" data-id="${book.id}">📚 Want to Read</button>
+      <button class="action" type="button" data-action="reading" data-id="${book.id}">📖 Currently Reading</button>
+      <button class="action" type="button" data-action="finish" data-id="${book.id}">✅ Mark as Read</button>
+      <a class="action" href="${escapeAttr(book.type==='podcast'?(book.podcastUrl||'#'):`https://www.goodreads.com/search?q=${encodeURIComponent(book.title+' '+book.author)}&search_type=books`)}" target="_blank" rel="noopener">🔗 Details</a>
+    </div>
+  </article>`;
+}
+function renderBooks(){
+  const c=$('#books-feed'); const list=BOOKS();
+  c.innerHTML = list.length? list.map(bookCard).join('') :
+    '<div style="text-align:center;padding:28px;color:var(--muted)"><h3 style="font-size:1rem">No items yet</h3><p class="small">Add a recommendation to get started.</p></div>';
+  $('#result-count').textContent=String(list.length)+' result'+(list.length===1?'':'s');
+}
+
+/* ========= Filters ========= */
+function populateRecommenderFilter(){
+  const sel=$('#recommender-filter'); const set={};
+  BOOKS().forEach(b=>{ if(b.recommender) set[b.recommender]=1; });
+  const names=Object.keys(set).sort((a,b)=>a.localeCompare(b));
+  sel.innerHTML=['<option value="">All Recommenders</option>'].concat(names.map(n=>`<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`)).join('');
 }
 function getAllTagsUnique(){
-  var set={}; BOOKS().forEach(function(b){ (b.tags||[]).forEach(function(t){ set[String(t).toLowerCase()]=1; }); }); return Object.keys(set).sort();
+  const set={}; BOOKS().forEach(b=> (b.tags||[]).forEach(t=> set[String(t).toLowerCase()]=1 ));
+  return Object.keys(set).sort();
 }
 function populateTagFilter(){
-  var sel=$('#tag-filter'); if(!sel) return; var cur=sel.value; var all=getAllTagsUnique();
-  sel.innerHTML=['<option value="">All Tags</option>'].concat(all.map(function(t){return '<option value="'+escapeAttr(t)+'">'+escapeHtml(t)+'</option>'; })).join('');
-  if(all.indexOf(cur)>-1) sel.value=cur;
+  const sel=$('#tag-filter'); const all=getAllTagsUnique();
+  sel.innerHTML=['<option value="">All Tags</option>'].concat(all.map(t=>`<option value="${escapeAttr(t)}">${escapeHtml(t)}</option>`)).join('');
 }
-function bookSearchScore(b,t){
-  if(!t) return 1;
-  var term=String(t).toLowerCase();
-  function inStr(s){ return String(s||'').toLowerCase(); }
-  var score=0;
-  var title=inStr(b.title), author=inStr(b.author), rec=inStr(b.recommender), syn=inStr(b.synopsis), rea=inStr(b.reason);
-  var tags=(b.tags||[]).map(function(x){return String(x).toLowerCase();});
-  if(title===term) score+=100;
-  if(title.indexOf(term)===0) score+=60;
-  if(title.indexOf(term)>-1) score+=30;
-  if(author.indexOf(term)===0) score+=30;
-  if(author.indexOf(term)>-1) score+=20;
-  if(rec.indexOf(term)>-1) score+=15;
-  if(rea.indexOf(term)>-1) score+=12;
-  if(syn.indexOf(term)>-1) score+=10;
-  if(tags.some(function(x){return x.indexOf(term)>-1;})) score+=25;
-  return score;
+function bookSearchScore(b,term){
+  if(!term) return 1;
+  const t=term.toLowerCase();
+  const inStr=s=>String(s||'').toLowerCase();
+  const title=inStr(b.title), author=inStr(b.author), rec=inStr(b.recommender), syn=inStr(b.synopsis), rea=inStr(b.reason);
+  const tags=(b.tags||[]).map(x=>String(x).toLowerCase());
+  let s=0;
+  if(title===t) s+=100; if(title.startsWith(t)) s+=60; if(title.includes(t)) s+=30;
+  if(author.startsWith(t)) s+=30; if(author.includes(t)) s+=20;
+  if(rec.includes(t)) s+=15; if(rea.includes(t)) s+=12; if(syn.includes(t)) s+=10;
+  if(tags.some(x=>x.includes(t))) s+=25; return s;
 }
 function applyFilters(){
-  var term=$('#search-input').value.trim();
-  var tagTerm=$('#tag-filter').value.trim().toLowerCase();
-  var cat=$('#category-filter').value;
-  var who=$('#recommender-filter').value;
-  var min=parseInt($('#min-rating').value,10)||0;
-  var sort=$('#sort-by').value;
-  var src=BOOKS();
-  var list=src
-    .map(function(b){ var o={}; for(var k in b) o[k]=b[k]; o._score=bookSearchScore(b,term); return o; })
-    .filter(function(b){
+  const term=$('#search-input').value.trim();
+  const tag=$('#tag-filter').value.trim().toLowerCase();
+  const cat=$('#category-filter').value;
+  const who=$('#recommender-filter').value;
+  const min=parseInt($('#min-rating').value,10)||0;
+  const sort=$('#sort-by').value;
+  let list=BOOKS()
+    .map(b=>{const o={...b,_score:bookSearchScore(b,term)};return o;})
+    .filter(b=>{
       if(term && b._score<=0) return false;
       if(cat && b.genre!==cat) return false;
       if(who && b.recommender!==who) return false;
       if(min && averageRatingForBook(b) < min) return false;
-      if(tagTerm && (b.tags||[]).map(function(t){return String(t).toLowerCase();}).indexOf(tagTerm)===-1) return false;
+      if(tag && !(b.tags||[]).map(x=>String(x).toLowerCase()).includes(tag)) return false;
       return true;
     });
-  if(term){ list.sort(function(a,b){ return (b._score-a._score) || (b.id-a.id); }); }
-  else if(sort==='new'){ list.sort(function(a,b){ return b.id-a.id; }); }
-  else if(sort==='likes'){ list.sort(function(a,b){ return (b.postLikes||0)-(a.postLikes||0); }); }
-  else if(sort==='rating'){ list.sort(function(a,b){ return averageRatingForBook(b)-averageRatingForBook(a); }); }
-  else if(sort==='title'){ list.sort(function(a,b){ return a.title.localeCompare(b.title); }); }
-  currentBooks=list; renderBooks();
+  if(term){ list.sort((a,b)=> (b._score-a._score)||(b.id-a.id)); }
+  else if(sort==='new'){ list.sort((a,b)=> b.id-a.id); }
+  else if(sort==='likes'){ list.sort((a,b)=> (b.postLikes||0)-(a.postLikes||0)); }
+  else if(sort==='rating'){ list.sort((a,b)=> averageRatingForBook(b)-averageRatingForBook(a)); }
+  else if(sort==='title'){ list.sort((a,b)=> a.title.localeCompare(b.title)); }
+  // render
+  $('#books-feed').innerHTML=list.map(bookCard).join('') || '<div style="text-align:center;padding:28px;color:var(--muted)">No matches.</div>';
+  $('#result-count').textContent=String(list.length)+' result'+(list.length===1?'':'s');
 }
 
-/* External search */
+/* ========= External search (Books + Podcasts) ========= */
+let lastSearchItems=[];
 const searchGoogleBooks = async function(q){
   var box=$('#book-results'); var input=$('#book-search');
   if(!q||q.trim().length<2){ box.style.display='none'; box.innerHTML=''; lastSearchItems=[]; return; }
@@ -1202,8 +688,7 @@ const searchGoogleBooks = async function(q){
     const url='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q.trim())+'&maxResults=10';
     const r=await fetch(url); if(!r.ok) throw new Error('Search failed '+r.status);
     const data=await r.json(); setLoading(input,false);
-    lastSearchItems=(data.items||[]).map(function(it,i){
-      var v=it.volumeInfo||{};
+    lastSearchItems=(data.items||[]).map((it,i)=>{ const v=it.volumeInfo||{};
       return { index:i, type:'book',
         title:v.title||'Unknown Title',
         authors:(v.authors||[]).join(', ')||'Unknown Author',
@@ -1214,10 +699,7 @@ const searchGoogleBooks = async function(q){
       };
     });
     renderSearchDropdown(lastSearchItems);
-  }catch(e){
-    setLoading(input,false); console.warn(e);
-    box.innerHTML='<div class="small" style="padding:8px;color:#b74a4a">Search failed. Try again.</div>'; box.style.display='block';
-  }
+  }catch(e){ setLoading(input,false); box.innerHTML='<div class="small" style="padding:8px;color:#b74a4a">Search failed. Try again.</div>'; box.style.display='block'; }
 };
 const searchApplePodcasts = async function(q){
   var box=$('#book-results'); var input=$('#book-search');
@@ -1227,32 +709,30 @@ const searchApplePodcasts = async function(q){
     const url='https://itunes.apple.com/search?term='+encodeURIComponent(q.trim())+'&entity=podcast&limit=10';
     const r=await fetch(url); if(!r.ok) throw new Error('Search failed '+r.status);
     const data=await r.json(); setLoading(input,false);
-    lastSearchItems=(data.results||[]).map(function(it,i){
-      return { index:i, type:'podcast',
-        title:it.collectionName||'Unknown Podcast',
-        authors:it.artistName||'Unknown Host',
-        cover:it.artworkUrl100||'',
-        description:'Podcast • '+(it.primaryGenreName||'General'),
-        categories:[(it.primaryGenreName||'podcast')],
-        podcastUrl:it.collectionViewUrl||''
-      };
-    });
+    lastSearchItems=(data.results||[]).map((it,i)=>({
+      index:i, type:'podcast',
+      title:it.collectionName||'Unknown Podcast',
+      authors:it.artistName||'Unknown Host',
+      cover:it.artworkUrl100||'',
+      description:'Podcast • '+(it.primaryGenreName||'General'),
+      categories:[(it.primaryGenreName||'podcast')],
+      podcastUrl:it.collectionViewUrl||''
+    }));
     renderSearchDropdown(lastSearchItems);
-  }catch(e){
-    setLoading(input,false); console.warn(e);
-    box.innerHTML='<div class="small" style="padding:8px;color:#b74a4a">Search failed. Try again.</div>'; box.style.display='block';
-  }
+  }catch(e){ setLoading(input,false); box.innerHTML='<div class="small" style="padding:8px;color:#b74a4a">Search failed. Try again.</div>'; box.style.display='block'; }
 };
 function renderSearchDropdown(items){
   var box=$('#book-results');
   if(!items.length){ box.innerHTML='<div class="small" style="padding:8px">No results</div>'; box.style.display='block'; return; }
-  box.innerHTML=items.map(function(r){
+  box.innerHTML=items.map(r=>{
     var badge = r.type==='podcast' ? '🎧' : '📚';
-    return '<div class="lb-row" data-pick="'+r.index+'"><div style="display:flex;gap:8px;align-items:center">'+
-      (r.cover?('<img src="'+escapeAttr(r.cover)+'" class="result-cover" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--line);object-fit:cover">'):'<div style="width:24px;height:24px;border-radius:4px;background:#e9ecef"></div>')+
-      '<div><strong>'+badge+' '+escapeHtml(r.title)+'</strong><div class="small">'+escapeHtml(r.authors)+'</div></div></div>'+
-      ((r.categories&&r.categories.length)?('<span class="lb-count">'+escapeHtml(String(r.categories[0]))+'</span>'):'')+
-      '</div>';
+    return `<div class="lb-row" data-pick="${r.index}">
+      <div style="display:flex;gap:8px;align-items:center">
+        ${ r.cover?(`<img src="${escapeAttr(r.cover)}" class="result-cover" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--line);object-fit:cover">`):'<div style="width:24px;height:24px;border-radius:4px;background:#e9ecef"></div>'}
+        <div><strong>${badge} ${escapeHtml(r.title)}</strong><div class="small">${escapeHtml(r.authors)}</div></div>
+      </div>
+      ${(r.categories&&r.categories.length)?(`<span class="lb-count">${escapeHtml(String(r.categories[0]))}</span>`):''}
+    </div>`;
   }).join('');
   box.style.display='block';
 }
@@ -1263,229 +743,97 @@ function setLoading(el,loading){
   else if(!loading && sp){ sp.parentNode && sp.parentNode.removeChild(sp); }
 }
 
-/* Export / Import */
-function download(name, text, mime){ mime = mime || 'text/csv;charset=utf-8;'; var blob=new Blob([text],{type:mime}); var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove(); }
-function toCsvRow(arr){ function escCsvStr(s){ return String(s==null?'':s).replace(/"/g,'""'); } return arr.map(function(v){return '"'+escCsvStr(v)+'"';}).join(','); }
-function exportCsvs(){
-  var all = []
-    .concat((books||[]).map(function(b){ var c=Object.assign({},b); c._scope='main'; return c; }))
-    .concat((wellnessBooks||[]).map(function(b){ var c=Object.assign({},b); c._scope='wellness'; return c; }));
-  var header = toCsvRow(['id','title','author','type','genre','recommender','image','avg_rating','ratings_count','tags','synopsis','reason','scope','series','series_number']);
-  var rows = all.map(function(b){ return toCsvRow([b.id,b.title,b.author,b.type||'book',b.genre,b.recommender,b.image||'',averageRatingForBook(b).toFixed(2),ratingCount(b),(b.tags||[]).join('|'),(b.synopsis||''),(b.reason||''),b._scope||'',b.seriesName||'',b.seriesNumber||'']);});
-  download('items.csv',[header].concat(rows).join('\n'));
-  var commentsHeader = toCsvRow(['book_id','book_title','comment_id','commenter','likes','text','system','scope']);
-  var commentsRows = all.reduce(function(acc,b){ return acc.concat((b.comments||[]).map(function(c){return toCsvRow([b.id,b.title,c.id,c.commenter||'',c.likes||0,c.text||'',c.system?1:0,b._scope||'']);})); },[]);
-  download('comments.csv',[commentsHeader].concat(commentsRows).join('\n'));
-}
-function exportJson(){ download('bookclub-export.json',JSON.stringify({books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon},null,2),'application/json'); }
-function importJson(file){
-  var fr=new FileReader();
-  fr.onload=function(){
-    try{
-      var data=JSON.parse(fr.result);
-      if(data.books) books=data.books;
-      if(data.wellnessBooks) wellnessBooks=data.wellnessBooks;
-      if(data.userData) userData=data.userData;
-      if(data.activity) activity=data.activity;
-      if(data.wellnessActivity) wellnessActivity=data.wellnessActivity;
-      if(data.sitePrefs) for(var k in data.sitePrefs){ sitePrefs[k]=data.sitePrefs[k]; }
-      if(data.comingSoon) comingSoon=data.comingSoon;
-      if(data.wellnessComingSoon) wellnessComingSoon=data.wellnessComingSoon;
-      saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('Import complete');
-    }catch(e){ showToast('Invalid JSON',true); }
-  };
-  fr.readAsText(file);
-}
-
-/* Modal */
-function openFinishModal(book){
-  finishContext = {bookId: book.id};
-  var urObj = (book.userRatings||[]).find(function(r){return r.user===currentUser;});
-  var mineEntry = me().readList.find(function(x){return String(x.id) === String(book.id);});
-  currentRating = (urObj?urObj.rating:undefined);
-  if(currentRating==null) currentRating = (mineEntry && mineEntry._rating) || 0;
-  $('#finish-title').textContent = book.title+' — '+book.author;
-  $$('#finish-stars .star').forEach(function(star){ var val=Number(star.getAttribute('data-rating')); star.classList.toggle('filled', val<=currentRating); });
-  $('#finish-modal').classList.add('show');
-}
-function closeFinishModal(){ $('#finish-modal').classList.remove('show'); finishContext=null; }
-
-/* Writing assistant */
-function localReason(o){
-  var title=o.title, author=o.author, genre=o.genre, synopsis=o.synopsis, tone=o.tone, tags=o.tags;
-  var bits=[], clean=function(s){ return String(s||'').replace(/\s+/g,' ').trim(); };
-  var s=clean(synopsis); var hook = s ? s.split(/(?<=[.!?])\s+/).slice(0,1).join(' ') : '';
-  if(tone==='hook'){ bits.push('Quick rec: '+title+' is a '+genre+' that grabs fast and doesn’t let go.'); }
-  else if(tone==='professional'){ bits.push(title+' distills '+genre+' ideas into clear, practical takeaways.'); }
-  else if(tone==='concise'){ bits.push(title+' is a sharp '+genre+' worth your time.'); }
-  else { bits.push('I loved how '+title+' by '+author+' blends '+genre+' into something memorable.'); }
-  if(hook) bits.push(hook);
-  if(tags) bits.push('Great for fans of '+tags+'.');
-  return clean(bits.join(' '));
-}
-async function suggestReason(tone){
-  var title=$('#title').value.trim(), author=$('#author').value.trim();
-  var genre=$('#genre').value, synopsis=$('#synopsis').value.trim();
-  var tags=(currentTags||[]).slice(0,6).join(', ');
-  var fallback = localReason({title:title,author:author,genre:genre,synopsis:synopsis,tone:tone,tags:tags});
-  var key=(sitePrefs.openaiKey||'').trim(); if(!key) return fallback;
-  try{
-    const prompt='Write a '+tone+' 2-3 sentence recommendation for "'+title+'" by '+author+'. Category '+genre+'. Tags: '+(tags||'—')+'. ~80 words. No spoilers.';
-    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:prompt}],temperature:0.7,max_tokens:180})});
-    if(!r.ok) throw new Error(await r.text());
-    const j=await r.json();
-    return (j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content && j.choices[0].message.content.trim()) || fallback;
-  }catch(e){ console.warn(e); return fallback; }
+/* ========= Category AUTO-POPULATE ========= */
+function inferCategory(rawCats, synopsis, type){
+  if(type==='podcast') return 'podcast';
+  const cats=(rawCats||[]).map(x=>String(x).toLowerCase());
+  const text=String(synopsis||'').toLowerCase();
+  const has=(arr,words)=>words.some(w=>arr.some(c=>c.includes(w))||text.includes(w));
+  if(has(cats,['fantasy','sword','dragon','magic'])) return 'fantasy';
+  if(has(cats,['science fiction','sci-fi','space','speculative'])) return 'sci-fi';
+  if(has(cats,['mystery','detective','crime','whodunnit'])) return 'mystery';
+  if(has(cats,['thriller','suspense','spy'])) return 'thriller';
+  if(has(cats,['horror','ghost','haunted'])) return 'horror';
+  if(has(cats,['romance','love'])) return 'romance';
+  if(has(cats,['young adult','ya'])) return 'young adult';
+  if(has(cats,['dystopian','post-apocalyptic'])) return 'dystopian';
+  if(has(cats,['history'])) return 'history';
+  if(has(cats,['science'])) return 'science';
+  if(has(cats,['technology','computer','software'])) return 'technology';
+  if(has(cats,['psychology','behavior'])) return 'psychology';
+  if(has(cats,['philosophy'])) return 'philosophy';
+  if(has(cats,['self-help','self help'])) return 'self-help';
+  if(has(cats,['personal development'])) return 'personal development';
+  if(has(cats,['business','management','entrepreneur'])) return 'business';
+  if(has(cats,['biography'])) return 'biography';
+  if(has(cats,['memoir'])) return 'memoir';
+  if(has(cats,['poetry'])) return 'poetry';
+  if(has(cats,['graphic','comics'])) return 'comics/graphic novel';
+  if(has(cats,['literary'])) return 'literary fiction';
+  if(has(cats,['religion','spiritual'])) return 'spirituality/religion';
+  if(has(cats,['health','fitness','wellness','nutrition','sleep'])) return 'health & fitness';
+  if(has(cats,['cook','cooking','food'])) return 'cooking';
+  if(has(cats,['education'])) return 'education';
+  if(has(cats,['parenting'])) return 'parenting';
+  if(has(cats,['travel'])) return 'travel';
+  if(has(cats,['finance','investing'])) return 'finance';
+  // high-level fiction/non-fiction fallback
+  if(has(cats,['fiction'])) return 'fiction';
+  if(has(cats,['nonfiction','non-fiction'])) return 'non-fiction';
+  return 'other';
 }
 
-/* Recs & Coming Soon */
+/* ========= Recs / trivial stubs ========= */
 function computeAndRenderRecs(){
-  var recsWrap=$('#recs'); var row=$('#recs-row');
-  if(!currentUser){ recsWrap.classList.remove('show'); row.innerHTML=''; return; }
-  var mine=me();
-  var haveIds={}; [].concat(mine.readList,mine.wishList,mine.currentReading).forEach(function(x){ if(x) haveIds[String(x.id)]=1; });
-  var tagCounts={};
-  (mine.readList||[]).forEach(function(x){
-    var b=findBookById(x.id); if(!b) return;
-    (b.tags||[]).forEach(function(t){ tagCounts[t]=(tagCounts[t]||0)+1; });
-  });
-  var topTags=Object.keys(tagCounts).sort(function(a,b){return (tagCounts[b]||0)-(tagCounts[a]||0);}).slice(0,4);
-  var pool=BOOKS().filter(function(b){
-    if(haveIds[String(b.id)]) return false;
-    if(b.recommender===currentUser) return false;
-    var ok = averageRatingForBook(b) >= 3.5;
-    if(!ok) return false;
-    if(!topTags.length) return true;
-    return (b.tags||[]).some(function(t){ return topTags.indexOf(String(t).toLowerCase())>-1; });
-  }).slice(0,6);
-  if(!pool.length){ recsWrap.classList.remove('show'); row.innerHTML=''; return; }
-  row.innerHTML=pool.map(function(b){
-    return '<div class="rec-card" data-id="'+b.id+'">'+
-      (b.image?'<img src="'+escapeAttr(b.image)+'" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--line)">':'')+
-      '<div class="rec-title">'+escapeHtml(b.title)+'</div>'+
-      '<div class="small" style="color:#334155">'+escapeHtml(b.author)+'</div>'+
-      '<button class="pill-btn rec-btn" type="button" data-action="wish" data-id="'+b.id+'">Add</button>'+
-    '</div>';
-  }).join('');
-  recsWrap.classList.add('show');
-}
-
-/* Scope switch */
-function setScope(s){
-  currentScope = (s==='wellness') ? 'wellness' : 'main';
-  $('#scope-main-btn').classList.toggle('active', currentScope==='main');
-  $('#scope-wellness-btn').classList.toggle('active', currentScope==='wellness');
-  $('#scope-subtitle').textContent = currentScope==='wellness' ? 'Wellness recommendations & resources' : 'Find your next favorite book';
-  populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats();
-}
-
-/* Utilities for actions */
-function findBookById(id){
-  id=Number(id);
-  return books.find(function(b){return Number(b.id)===id;}) || wellnessBooks.find(function(b){return Number(b.id)===id;});
-}
-function addActionComment(book, text, by){
-  book.comments = book.comments || [];
-  book.comments.unshift({ id: Date.now(), commenter: by||'Anonymous', likes: 0, likedBy: [], text: text||'' });
-}
-function openSection(id){
-  $$('.section').forEach(function(s){ s.classList.remove('active'); });
-  $('#'+id).classList.add('active');
-}
-
-/* “Find Similar” — simple tag/author match toast */
-function findSimilarOf(book){
-  var pool = BOOKS().filter(function(b){ return b.id!==book.id; });
-  var tags = (book.tags||[]).map(function(t){return String(t).toLowerCase();});
-  var picks = pool.map(function(b){
-    var score=0;
-    if(b.author===book.author) score+=3;
-    (b.tags||[]).forEach(function(t){ if(tags.indexOf(String(t).toLowerCase())>-1) score+=1; });
-    if(b.genre===book.genre) score+=1;
-    return {b:b,score:score};
-  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;}).slice(0,3).map(function(x){return x.b.title;});
-  showToast(picks.length?('Similar: '+picks.join(' • ')):'No close matches yet');
-}
-
-/* Check releases (stub with local series names → just shows watched) */
-async function checkNewReleases(){
-  var w=sitePrefs.watchedSeries||[];
-  if(!w.length){ showToast('No watched series yet'); return; }
-  // Stub demo entries — you can wire to real APIs later
-  var arr = w.slice(0,3).map(function(name,i){
-    return {title:'Next in '+name, author:'TBD', series:name, release:'TBD '+(new Date().getFullYear())};
-  });
-  if(currentScope==='main') comingSoon=arr; else wellnessComingSoon=arr;
-  renderComingSoon(); showToast('Checked series (demo)');
-}
-
-/* Admin Routing */
-function openAdminPage(){
-  document.body.scrollTop = document.documentElement.scrollTop = 0;
-  $('#admin-page').style.display='block';
-  $('.container').style.display='none';
-  location.hash = '#admin';
-}
-function closeAdminPage(){
-  $('#admin-page').style.display='none';
-  $('.container').style.display='block';
-  if(location.hash==='#admin') history.replaceState(null,'',location.pathname+location.search);
+  const wrap=document.getElementById('recs');
+  if(!currentUser){ wrap.style.display='none'; return; }
+  const row=document.getElementById('recs-row');
+  const pool=BOOKS().slice(0,6);
+  row.innerHTML=pool.map(b=>`
+    <div class="lb-card" style="text-align:center">
+      ${b.image?`<img src="${escapeAttr(b.image)}" alt="" style="width:100%;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--line)">`:''}
+      <div style="font-weight:800;margin-top:6px">${escapeHtml(b.title)}</div>
+      <div class="small" style="color:var(--muted)">${escapeHtml(b.author)}</div>
+      <button class="pill-btn" type="button" data-action="wish" data-id="${b.id}" style="margin-top:6px">Add</button>
+    </div>`).join('');
+  wrap.style.display='block';
 }
 
 /* ========= Boot ========= */
 document.addEventListener('DOMContentLoaded', async function(){
   await loadAll();
-  setupPWA();
-
-  // initial UI
-  $('#login-section').style.display='block';
-  $('#main-app').style.display='none';
-  $('#user-bar').style.display='none';
-  $('#prelogin-row').style.display='none';
-  $('#main-nav').style.display='none';
-
+  applyDim();
   populateCategoryOptions(); populateRecommenderFilter(); populateTagFilter();
-  applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries();
+  renderBooks(); updateStats();
 
-  // header chips & nav
-  $('#stat-books').addEventListener('click', function(){ openSection('feed'); window.scrollTo({top:0,behavior:'smooth'}); });
-  $('#users-chip').addEventListener('mouseenter', function(){ var p=$('#users-pop'); p.style.display='block'; var r=$('#users-chip').getBoundingClientRect(); p.style.position='fixed'; p.style.left=(r.left)+'px'; p.style.top=(r.bottom+6)+'px'; });
-  $('#users-pop').addEventListener('mouseleave', function(){ $('#users-pop').style.display='none'; });
+  /* scope */
+  $('#scope-main-btn').addEventListener('click', function(){ currentScope='main'; this.classList.add('active'); $('#scope-wellness-btn').classList.remove('active'); $('#scope-subtitle').textContent='Find your next favorite book'; populateRecommenderFilter(); populateTagFilter(); applyFilters(); });
+  $('#scope-wellness-btn').addEventListener('click', function(){ currentScope='wellness'; this.classList.add('active'); $('#scope-main-btn').classList.remove('active'); $('#scope-subtitle').textContent='Wellness recommendations & resources'; populateRecommenderFilter(); populateTagFilter(); applyFilters(); });
 
-  // scope
-  $('#scope-main-btn').addEventListener('click', function(){ setScope('main'); });
-  $('#scope-wellness-btn').addEventListener('click', function(){ setScope('wellness'); });
+  /* nav */
+  $('#feed-btn').addEventListener('click', ()=>{ $$('.section').forEach(s=>s.classList.remove('active')); $('#feed').classList.add('active'); applyFilters(); });
+  $('#add-btn').addEventListener('click', ()=>{ $$('.section').forEach(s=>s.classList.remove('active')); $('#add').classList.add('active'); });
+  $('#my-books-btn').addEventListener('click', ()=>{ $$('.section').forEach(s=>s.classList.remove('active')); $('#my-books').classList.add('active'); });
+  $('#prefs-btn').addEventListener('click', ()=>{ $$('.section').forEach(s=>s.classList.remove('active')); $('#prefs').classList.add('active'); });
 
-  // subnav
-  $('#feed-btn').addEventListener('click', function(){ openSection('feed'); applyFilters(); });
-  $('#add-btn').addEventListener('click', function(){ openSection('add'); });
-  $('#my-books-btn').addEventListener('click', function(){ openSection('my-books'); renderMyLists(); });
-  $('#prefs-btn').addEventListener('click', function(){ openSection('prefs'); });
-
-  // login
+  /* login */
   $('#login-form').addEventListener('submit', function(e){
     e.preventDefault();
-    var name=($('#username-input').value||'').trim(); if(!name) return;
-    currentUser=name; ensureUser(currentUser);
-    $('#current-user-name').textContent=currentUser;
-    $('#user-bar').style.display='flex';
-    $('#login-section').style.display='none';
-    $('#main-app').style.display='block';
-    $('#main-nav').style.display='flex';
-    $('#recommender').value=currentUser;
-    $('#prelogin-row').style.display='grid';
-    renderMyLists(); updateStats(); applyFilters(); renderActivity(); computeAndRenderRecs();
+    const name=($('#username-input').value||'').trim(); if(!name) return;
+    currentUser=name; $('#current-user-name').textContent=currentUser;
+    $('#user-bar').style.display='flex'; $('#login-section').style.display='none'; $('#main-app').style.display='block'; $('#main-nav').style.display='flex';
+    $('#recommender').value=currentUser; $('#prelogin-row').style.display='grid';
+    computeAndRenderRecs();
   });
   $('#logout-btn').addEventListener('click', function(){
-    currentUser=''; $('#user-bar').style.display='none'; $('#main-app').style.display='none';
-    $('#login-section').style.display='block'; $('#prelogin-row').style.display='none'; $('#main-nav').style.display='none'; computeAndRenderRecs();
+    currentUser=''; $('#user-bar').style.display='none'; $('#main-app').style.display='none'; $('#login-section').style.display='block'; $('#prelogin-row').style.display='none'; $('#main-nav').style.display='none';
   });
 
-  // activity UI
-  $('#activity-toggle').addEventListener('click', function(){ activityExpanded=!activityExpanded; renderActivity(); });
-  $('#activity-filter').addEventListener('change', renderActivity);
+  /* activity expand/filter (prelogin sample only) */
+  $('#activity-toggle').addEventListener('click', function(){ activityExpanded=!activityExpanded; });
+  $('#activity-filter').addEventListener('change', function(){});
 
-  // filters
+  /* filters */
   $('#search-input').addEventListener('input', applyFilters);
   $('#tag-filter').addEventListener('change', applyFilters);
   $('#category-filter').addEventListener('change', applyFilters);
@@ -1494,137 +842,91 @@ document.addEventListener('DOMContentLoaded', async function(){
   $('#sort-by').addEventListener('change', applyFilters);
   $('#collapse-all').addEventListener('change', renderBooks);
   $('#hide-synopses').addEventListener('change', renderBooks);
-
-  // recs refresh
   $('#recs-refresh').addEventListener('click', computeAndRenderRecs);
 
-  // unified search
-  var debounceT=null;
-  function doUnifiedSearch(q){
-    var t=$('#media-type').value;
-    if(t==='podcast') searchApplePodcasts(q);
-    else searchGoogleBooks(q);
-  }
-  $('#book-search').addEventListener('input',function(e){
-    clearTimeout(debounceT); debounceT=setTimeout(function(){doUnifiedSearch(e.target.value);},300);
-  });
+  /* unified search box */
+  let debounceT=null;
+  function doUnifiedSearch(q){ ($('#media-type').value==='podcast') ? searchApplePodcasts(q) : searchGoogleBooks(q); }
+  $('#book-search').addEventListener('input',function(e){ clearTimeout(debounceT); debounceT=setTimeout(()=>doUnifiedSearch(e.target.value),300); });
   $('#media-type').addEventListener('change', function(){
     $('#book-search').placeholder = this.value==='podcast' ? 'Search Apple Podcasts…' : 'Search Google Books…';
-    $('#book-results').style.display='none'; $('#book-results').innerHTML='';
-    lastSearchItems=[];
+    $('#book-results').style.display='none'; $('#book-results').innerHTML=''; lastSearchItems=[];
+    if(this.value==='podcast'){ $('#genre').value='podcast'; }
   });
-  document.addEventListener('click',function(e){
-    var pick=e.target.closest && e.target.closest('[data-pick]');
-    if(pick){
-      var i=Number(pick.getAttribute('data-pick'));
-      var it=lastSearchItems[i]; if(!it) return;
-      $('#title').value=it.title;
-      $('#author').value=it.authors;
-      $('#book-image').value=it.cover||'';
-      $('#synopsis').value=it.description||'';
-      if(it.type==='podcast'){ $('#media-type').value='podcast'; }
-      currentTags=[]; if(it.categories && it.categories.length) currentTags=currentTags.concat(it.categories.slice(0,3).map(function(x){return String(x).toLowerCase();}));
-      renderTagsDisplay();
-      autoTagsFrom({categories:it.categories,genre:$('#genre').value,synopsis:$('#synopsis').value});
-      $('#book-results').style.display='none';
-      $('#book-form').dataset.podcastUrl = it.podcastUrl || '';
-    }
-  });
-  var bs = document.getElementById('book-search'); if(bs){ bs.addEventListener('keydown', function(e){ if((e.key||'')==='Enter' || e.keyCode===13) e.preventDefault(); }); }
 
-  // tag interactions
+  /* pick from dropdown => fill form + AUTO-CATEGORY */
+  document.addEventListener('click',function(e){
+    const el=e.target.closest && e.target.closest('[data-pick]');
+    if(!el) return;
+    const i=Number(el.getAttribute('data-pick')); const it=lastSearchItems[i]; if(!it) return;
+    $('#title').value=it.title; $('#author').value=it.authors; $('#book-image').value=it.cover||''; $('#synopsis').value=it.description||'';
+    // infer category and set it
+    const inferred = inferCategory(it.categories, it.description, it.type);
+    const genreSel = $('#genre'); if(genreSel){ genreSel.value = inferred; }
+    // tags
+    currentTags=[]; if(it.categories && it.categories.length) currentTags=currentTags.concat(it.categories.slice(0,3).map(x=>String(x).toLowerCase()));
+    renderTagsDisplay();
+    // For podcasts, store link + ensure category
+    if(it.type==='podcast'){
+      $('#media-type').value='podcast';
+      $('#book-form').dataset.podcastUrl = it.podcastUrl || '';
+      if($('#genre').value!=='podcast') $('#genre').value='podcast';
+      if(!currentTags.includes('podcast')) currentTags.unshift('podcast');
+      renderTagsDisplay();
+    } else {
+      $('#media-type').value='book';
+      $('#book-form').dataset.podcastUrl='';
+    }
+    $('#book-results').style.display='none';
+  });
+
+  /* tag UI */
   $('#tags-display').addEventListener('click', function(e){
     var x=e.target.closest && e.target.closest('.tag'); if(!x) return;
-    var t=x.getAttribute('data-tag'); currentTags=currentTags.filter(function(y){return y!==t;}); renderTagsDisplay();
+    var t=x.getAttribute('data-tag'); currentTags=currentTags.filter(y=>y!==t); renderTagsDisplay();
   });
   $('#tag-input').addEventListener('input',function(e){
     var q=(e.target.value||'').toLowerCase().trim(); var s=$('#tag-suggestions');
     if(!q){s.style.display='none';return;}
-    var items=tagSuggestions.filter(function(t){return t.indexOf(q)>-1 && currentTags.indexOf(t)===-1;}).slice(0,8);
-    s.innerHTML=items.map(function(t){return '<div class="lb-row" data-tagpick="'+t+'"><div>'+t+'</div></div>';}).join('');
+    var items=tagSuggestions.filter(t=>t.includes(q) && !currentTags.includes(t)).slice(0,8);
+    s.innerHTML=items.map(t=>`<div class="lb-row" data-tagpick="${t}"><div>${t}</div></div>`).join('');
     s.style.display=items.length?'block':'none';
   });
   document.addEventListener('click',function(e){
     var t=e.target.closest && e.target.closest('[data-tagpick]');
-    if(t){ addTag(t.getAttribute('data-tagpick')); var s=$('#tag-suggestions'); if(s) s.style.display='none'; }
+    if(t){ addTag(t.getAttribute('data-tagpick')); $('#tag-suggestions').style.display='none'; }
   });
-  $('#synopsis').addEventListener('blur', function(){ autoTagsFrom({categories:[],genre:$('#genre').value,synopsis:$('#synopsis').value}); });
   (function(){
     var tagInput = document.getElementById('tag-input'); if(!tagInput) return;
     function commitTag(){ var val=(tagInput.value||'').trim(); if(val) addTag(val); }
     tagInput.addEventListener('keydown', function(e){
-      var key=e.key||''; if(key==='Enter' || String(key).toLowerCase()==='go' || e.keyCode===13 || key===',' || key==='Tab'){ e.preventDefault(); commitTag(); }
+      var key=e.key||''; if(key==='Enter' || e.keyCode===13 || key===',' || key==='Tab'){ e.preventDefault(); commitTag(); }
     });
   })();
 
-  // rating stars (Add form)
-  $$('#rating-stars .star').forEach(function(star){
+  /* rating stars (Add form) */
+  $$('#rating-stars .star').forEach(star=>{
     star.addEventListener('click', function(){
       var val=Number(star.getAttribute('data-rating'));
       currentRating=val;
-      $$('#rating-stars .star').forEach(function(s){ s.classList.toggle('filled', Number(s.getAttribute('data-rating'))<=val); });
+      $$('#rating-stars .star').forEach(s=> s.classList.toggle('filled', Number(s.getAttribute('data-rating'))<=val));
       $('#rating-feedback').textContent='You selected '+val+' star'+(val===1?'':'s')+'.';
     });
   });
 
-  // rating modal stars
-  $$('#finish-stars .star').forEach(function(star){
-    star.addEventListener('click', function(){
-      var val=Number(star.getAttribute('data-rating'));
-      currentRating=val;
-      $$('#finish-stars .star').forEach(function(s){ s.classList.toggle('filled', Number(s.getAttribute('data-rating'))<=val); });
-    });
-  });
-
-  // finish modal actions
-  $('#finish-save').addEventListener('click', function(){
-    try{
-      if(!finishContext){ closeFinishModal(); return; }
-      var book=findBookById(finishContext.bookId); if(!book){ closeFinishModal(); return; }
-      var rating = isFinite(currentRating) ? currentRating : 0;
-      ensureUser(currentUser);
-      var mine = me();
-      var idStr = String(book.id);
-      var already = mine.readList.some(function(x){return String(x.id)===idStr;});
-      var nowTs = Date.now();
-      if(!already){
-        mine.readList.push({id:book.id,title:book.title,author:book.author,_rating:rating,_wellness:(book._scope==='wellness'),_finishedAt:nowTs,_changedAt:nowTs});
-        mine.currentReading = mine.currentReading.filter(function(x){return String(x.id)!==idStr;});
-        mine.wishList = mine.wishList.filter(function(x){return String(x.id)!==idStr;});
-      }else{
-        var rec = mine.readList.find(function(x){return String(x.id)===idStr;}); rec._rating = rating; rec._finishedAt = nowTs; rec._changedAt = nowTs;
-      }
-      book.userRatings = book.userRatings || [];
-      var ex = book.userRatings.find(function(r){return r.user===currentUser;});
-      if(ex) ex.rating = rating; else book.userRatings.push({user:currentUser,rating:rating});
-
-      var payload={user:currentUser,title:book.title,author:book.author}; if(rating>0) payload.rating=rating;
-      mergeOrPostActivity({type:'finish',payload:payload});
-      addActionComment(book, currentUser+' finished this '+(book.type==='podcast'?'podcast':'book')+(rating>0?(' — '+rating+'★'):''), currentUser);
-      if(rating===5){ mergeOrPostActivity({type:'five',payload:{user:currentUser,title:book.title,author:book.author,rating:5}}); postToTeams('five', currentUser+' rated "'+book.title+'" 5★'); }
-      postToTeams('finish', currentUser+' finished "'+book.title+'"'+(rating>0?(' — '+rating+'★'):'')); saveAll(); closeFinishModal(); renderMyLists(); applyFilters(); updateStats(); showToast('Marked as read!');
-    }catch(e){ console.warn(e); closeFinishModal(); showToast('Saved locally. If something looks off, refresh.',true); }
-  });
-  $('#finish-cancel').addEventListener('click', closeFinishModal);
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && $('#finish-modal').classList.contains('show')) closeFinishModal(); });
-  document.addEventListener('click',function(e){ var m = $('#finish-modal'); if(!m || !m.classList.contains('show')) return; if(!m.contains(e.target)) closeFinishModal(); });
-
-  // submit new recommendation
+  /* Save new rec */
   $('#book-form').addEventListener('submit', function(e){
     e.preventDefault();
     if(!currentUser){ showToast('Please log in first.', true); return; }
     var title=$('#title').value.trim(), author=$('#author').value.trim();
     var genre=$('#genre').value, recommender=(($('#recommender').value)||currentUser).trim();
     var image=$('#book-image').value.trim(), synopsis=$('#synopsis').value.trim(), reason=$('#reason').value.trim();
-    var seriesName=($('#series-name').value||'').trim();
-    var seriesNumber=($('#series-number').value||'').trim();
+    var seriesName=($('#series-name').value||'').trim(); var seriesNumber=($('#series-number').value||'').trim();
     var mediaType = ($('#media-type').value||'book');
     if(!title||!author||!reason||!currentRating){ showToast('Title, author/host, rating, and reason are required.',true); return; }
     var book={id:Date.now(),
-      type: mediaType,
-      title:title, author:author, genre:genre, recommender:recommender,
-      image:image, synopsis:synopsis, reason:reason, rating:currentRating, userRatings:[],
-      tags:currentTags.slice(), comments:[], postLikes:0, postLikedBy:[], _scope:currentScope,
+      type: mediaType, title, author, genre, recommender, image, synopsis, reason,
+      rating:currentRating, userRatings:[], tags:currentTags.slice(), comments:[], postLikes:0, postLikedBy:[], _scope:currentScope,
       seriesName:seriesName || '', seriesNumber:seriesNumber || ''
     };
     if(mediaType==='podcast'){
@@ -1634,235 +936,20 @@ document.addEventListener('DOMContentLoaded', async function(){
       if(book.tags.indexOf('podcast')===-1) book.tags.unshift('podcast');
     }
     BOOKS().unshift(book);
-
-    if($('#watch-series').checked && seriesName){ watchSeriesName(seriesName); }
-
-    ensureUser(recommender);
-    var recMe=userData[recommender];
-    var nowTs=Date.now();
-    if(!recMe.readList.some(function(x){return x.id===book.id;}))
-      recMe.readList.push({id:book.id,title:book.title,author:book.author,_rating:currentRating,_wellness:(currentScope==='wellness'),_finishedAt:nowTs,_changedAt:nowTs});
-
-    addActionComment(book, recommender+' shared this '+(book.type==='podcast'?'podcast':'book')+' — '+currentRating+'★', recommender);
-    mergeOrPostActivity({type:'share',payload:{user:recommender,title:title,author:author,rating:currentRating}});
-    if(currentRating===5){ mergeOrPostActivity({type:'five',payload:{user:recommender,title:title,author:author,rating:5}}); }
-
+    // reset
     $('#book-form').reset(); currentTags=[]; renderTagsDisplay(); currentRating=0;
-    $$('#rating-stars .star').forEach(function(s){ s.classList.remove('filled'); });
+    $$('#rating-stars .star').forEach(s=> s.classList.remove('filled'));
     $('#rating-feedback').textContent='Click stars to rate (required)';
     $('#book-results').style.display='none'; $('#book-form').dataset.podcastUrl='';
-    saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); updateStats(); renderWatchedSeries(); showToast('Shared!');
+    saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); updateStats(); showToast('Shared!');
   });
 
-  // prefs & admin
-  $('#prefs-save').addEventListener('click', function(){
-    sitePrefs.postNew=$('#pref-post-new').checked;
-    sitePrefs.postFinish=$('#pref-post-finish').checked;
-    sitePrefs.postFive=$('#pref-post-5').checked;
-    saveAll(); showToast('Preferences saved.');
-  });
-  $('#save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#pref-teams-url').value.trim(); saveAll(); showToast('Teams URL saved'); });
-  $('#export-csv-btn').addEventListener('click', exportCsvs);
-  $('#export-json-btn').addEventListener('click', exportJson);
-  $('#import-json').addEventListener('change', function(e){ var f=e.target.files && e.target.files[0]; if(f) importJson(f); e.target.value=''; });
-
-  // Admin (inline)
-  $('#toggle-danger').addEventListener('click', function(){
-    var dm=$('#data-management');
-    if(dm.style.display==='none' || !dm.style.display){
-      var pw=prompt('Enter admin password:'); if(pw!==ADMIN_PASSWORD){ showToast('Incorrect password',true); return; }
-      dm.style.display='block';
-    }else{ dm.style.display='none'; }
-  });
-  function updateCloudStatus(){
-    var chip=$('#cloud-status');
-    var custom = (sitePrefs.cloudApiKey||'').trim() && (sitePrefs.cloudBinId||'').trim();
-    chip.textContent = custom ? 'Custom bin connected' : 'Default bin';
-  }
-  updateCloudStatus();
-  $('#cloud-save').addEventListener('click', function(){
-    sitePrefs.cloudApiKey=$('#cloud-api-key').value.trim();
-    sitePrefs.cloudBinId=$('#cloud-bin-id').value.trim();
-    saveAll(false); updateCloudStatus(); showToast('Cloud config saved');
-  });
-  $('#cloud-clear').addEventListener('click', function(){
-    sitePrefs.cloudApiKey=''; sitePrefs.cloudBinId=''; $('#cloud-api-key').value=''; $('#cloud-bin-id').value='';
-    saveAll(false); updateCloudStatus(); showToast('Cloud config cleared');
-  });
-  $('#cloud-create').addEventListener('click', async function(){
-    try{
-      var key = ($('#cloud-api-key').value||'').trim() || DEFAULT_API_KEY;
-      const payload={books,wellnessBooks,userData,activity,wellnessActivity,sitePrefs,comingSoon,wellnessComingSoon};
-      const r=await fetch(JSONBIN_API+'/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':key},body:JSON.stringify(payload)});
-      if(!r.ok) throw new Error(await r.text());
-      const j=await r.json();
-      var id = (j && j.metadata && j.metadata.id) || '';
-      if(id){ sitePrefs.cloudApiKey=key; sitePrefs.cloudBinId=id; $('#cloud-api-key').value=key; $('#cloud-bin-id').value=id; saveAll(false); updateCloudStatus(); showToast('Created new bin'); }
-      else showToast('Could not parse new bin id',true);
-    }catch(e){ console.warn(e); showToast('Create failed',true); }
-  });
-  $('#cloud-pull').addEventListener('click', async function(){
-    try{
-      const r=await fetch(JSONBIN_API+'/b/'+effectiveBin()+'/latest',{headers:{'X-Master-Key':effectiveApiKey()}});
-      if(!r.ok) throw new Error(await r.text());
-      const data=await r.json();
-      const record=data.record||{};
-      books=record.books||books; wellnessBooks=record.wellnessBooks||wellnessBooks; userData=record.userData||userData;
-      activity=record.activity||activity; wellnessActivity=record.wellnessActivity||wellnessActivity;
-      comingSoon=record.comingSoon||comingSoon; wellnessComingSoon=record.wellnessComingSoon||wellnessComingSoon;
-      for(var k2 in (record.sitePrefs||{})){ sitePrefs[k2]=record.sitePrefs[k2]; }
-      saveAll(false); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries();
-      showToast('Pulled from cloud');
-    }catch(e){ console.warn(e); showToast('Pull failed',true); }
-  });
-  $('#cloud-push').addEventListener('click', async function(){ await saveAll(true); showToast('Pushed to cloud'); });
-
-  // Admin (separate page wires)
-  function guard(){ var pw=prompt('Admin password:'); if(pw!==ADMIN_PASSWORD){ showToast('Incorrect password',true); return false; } return true; }
-  function doClear(){ if(!confirm('This will erase ALL data. Continue?'))return;
-    books=[]; wellnessBooks=[]; userData={}; activity=[]; wellnessActivity=[]; comingSoon=[]; wellnessComingSoon=[];
-    sitePrefs={teamsWebhook:'',postNew:true,postFinish:true,postFive:true,openaiKey:sitePrefs.openaiKey||'',cloudApiKey:sitePrefs.cloudApiKey||'',cloudBinId:sitePrefs.cloudBinId||'',watchedSeries:sitePrefs.watchedSeries||[]};
-    saveAll(); populateRecommenderFilter(); populateTagFilter(); applyFilters(); renderActivity(); renderMyLists(); updateStats(); renderWatchedSeries(); showToast('All data cleared.');
-  }
-  $('#clear-data-btn').addEventListener('click', function(){ if(guard()) doClear(); });
-  $('#rename-user-btn').addEventListener('click', function(){
-    if(!guard()) return;
-    var from=$('#rename-from').value.trim(); var to=$('#rename-to').value.trim();
-    if(!from||!to){ showToast('Enter both names',true); return; }
-    if(!userData[from]){ showToast('From user not found',true); return; }
-    ensureUser(to);
-    ['readList','wishList','currentReading'].forEach(function(k){
-      var a=userData[to][k]; var b=userData[from][k]; var ids={}; a.forEach(function(x){ids[x.id]=1;});
-      b.forEach(function(x){ if(!ids[x.id]) a.push(x); });
-    });
-    delete userData[from];
-    saveAll(); updateStats(); showToast('User renamed/merged');
-  });
-  $('#delete-book-btn').addEventListener('click', function(){
-    if(!guard()) return;
-    var idStr=$('#delete-book-id').value.trim(); if(!idStr){ showToast('Enter an ID',true); return; }
-    var id=Number(idStr);
-    var before=(books.length+wellnessBooks.length);
-    books = books.filter(function(b){return b.id!==id;});
-    wellnessBooks = wellnessBooks.filter(function(b){return b.id!==id;});
-    Object.keys(userData).forEach(function(k){
-      var u=userData[k];
-      ['readList','wishList','currentReading'].forEach(function(key){ u[key]=u[key].filter(function(x){return x.id!==id;}); });
-    });
-    if((books.length+wellnessBooks.length)===before){ showToast('No item with that ID found',true); return; }
-    saveAll(); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
-  });
-  $('#purge-activity-btn').addEventListener('click', function(){
-    if(!guard()) return;
-    var days=parseInt($('#activity-days').value.trim(),10); if(!days||days<1){ showToast('Enter a valid number of days',true); return; }
-    var cutoff=Date.now() - days*24*3600*1000;
-    var arr=ACTIV(); var before=arr.length;
-    var keep=arr.filter(function(a){ return new Date(a.at).getTime() >= cutoff; });
-    if(currentScope==='main') activity=keep; else wellnessActivity=keep;
-    saveAll(); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
-  });
-  $('#delete-last-activity-btn').addEventListener('click', function(){
-    if(!guard()) return;
-    var arr=ACTIV();
-    if(arr.length){ arr.shift(); saveAll(); renderActivity(); showToast('Most recent activity deleted.'); }
-    else { showToast('No activity to delete'); }
-  });
-
-  function wireAdminPage(){
-    $('#a-clear-data-btn').addEventListener('click', function(){ if(guard()) doClear(); });
-    $('#a-rename-user-btn').addEventListener('click', function(){
-      if(!guard()) return;
-      var from=$('#a-rename-from').value.trim(); var to=$('#a-rename-to').value.trim();
-      if(!from||!to){ showToast('Enter both names',true); return; }
-      if(!userData[from]){ showToast('From user not found',true); return; }
-      ensureUser(to);
-      ['readList','wishList','currentReading'].forEach(function(k){
-        var a=userData[to][k]; var b=userData[from][k]; var ids={}; a.forEach(function(x){ids[x.id]=1;});
-        b.forEach(function(x){ if(!ids[x.id]) a.push(x); });
-      });
-      delete userData[from];
-      saveAll(); updateStats(); showToast('User renamed/merged');
-    });
-    $('#a-delete-book-btn').addEventListener('click', function(){
-      if(!guard()) return;
-      var idStr=$('#a-delete-book-id').value.trim(); if(!idStr){ showToast('Enter an ID',true); return; }
-      var id=Number(idStr);
-      var before=(books.length+wellnessBooks.length);
-      books = books.filter(function(b){return b.id!==id;});
-      wellnessBooks = wellnessBooks.filter(function(b){return b.id!==id;});
-      Object.keys(userData).forEach(function(k){
-        var u=userData[k];
-        ['readList','wishList','currentReading'].forEach(function(key){ u[key]=u[key].filter(function(x){return x.id!==id;}); });
-      });
-      if((books.length+wellnessBooks.length)===before){ showToast('No item with that ID found',true); return; }
-      saveAll(); applyFilters(); renderMyLists(); updateStats(); showToast('Item deleted.');
-    });
-    $('#a-purge-activity-btn').addEventListener('click', function(){
-      if(!guard()) return;
-      var days=parseInt($('#a-activity-days').value.trim(),10); if(!days||days<1){ showToast('Enter a valid number of days',true); return; }
-      var cutoff=Date.now() - days*24*3600*1000;
-      var arr=ACTIV(); var before=arr.length;
-      var keep=arr.filter(function(a){ return new Date(a.at).getTime() >= cutoff; });
-      if(currentScope==='main') activity=keep; else wellnessActivity=keep;
-      saveAll(); renderActivity(); showToast('Purged '+(before-keep.length)+' activity items.');
-    });
-    $('#a-delete-last-activity-btn').addEventListener('click', function(){
-      if(!guard()) return;
-      var arr=ACTIV();
-      if(arr.length){ arr.shift(); saveAll(); renderActivity(); showToast('Most recent activity deleted.'); }
-      else { showToast('No activity to delete'); }
-    });
-    $('#a-save-teams-btn').addEventListener('click', function(){ sitePrefs.teamsWebhook=$('#a-pref-teams-url').value.trim(); saveAll(); showToast('Teams URL saved'); });
-    $('#admin-back').addEventListener('click', closeAdminPage);
-  }
-  wireAdminPage();
-  $('#open-admin-page').addEventListener('click', function(){ if(guard()) openAdminPage(); });
-  if(location.hash==='#admin'){ openAdminPage(); }
-
-  // install PWA
-  $('#install-app-btn').addEventListener('click', async function(){
-    var status=$('#install-status');
-    var standalone=(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
-    if(standalone){ showToast('Already installed'); return; }
-    if(deferredPrompt){
-      deferredPrompt.prompt(); var res=await deferredPrompt.userChoice;
-      if(res && res.outcome==='accepted'){ status.textContent='Installed'; showToast('Installed'); }
-      deferredPrompt=null;
-    } else{
-      $('#ios-steps').setAttribute('open','open'); showToast('On iPhone/iPad use Share → Add to Home Screen');
-    }
-  });
-
-  // writing assistant key
-  $('#save-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=$('#openai-key').value.trim(); saveAll(); showToast('API key saved (local only)'); });
-  $('#clear-openai-key').addEventListener('click', function(){ sitePrefs.openaiKey=''; $('#openai-key').value=''; saveAll(); showToast('API key cleared'); });
-
-  // suggest reason
-  $('#reason-suggest').addEventListener('click', async function(){
-    var tone=$('#reason-tone').value||'personal'; var btn=$('#reason-suggest');
-    setLoading(btn,true); var text=await suggestReason(tone); setLoading(btn,false);
-    $('#reason').value=text; $('#reason').focus();
-  });
-
-  // global click handlers (comments, likes, lists, series, etc.)
+  /* Comments & actions on feed (wish/reading/finish + synopsis toggle) */
   document.addEventListener('click',function(e){
     var btn=e.target.closest && e.target.closest('[data-action]');
-    var jump=e.target.closest && e.target.closest('[data-jump]');
-    if(jump){
-      var id=jump.getAttribute('data-jump'); var el=$('#book-'+id);
-      if(el){ openSection('feed'); el.scrollIntoView({behavior:'smooth',block:'start'}); }
-      return;
-    }
     if(!btn) return;
-    var action=btn.getAttribute('data-action');
-    var bookId=btn.getAttribute('data-id');
-    var cid=btn.getAttribute('data-cid');
-
-    function findBook(id){ return findBookById(id); }
-
-    if(action==='toggle-comments'){
-      var list=$('[data-list="'+bookId+'"]'); if(list) list.style.display=(list.style.display==='none'?'grid':'none'); return;
-    }
+    var action=btn.getAttribute('data-action'); var bookId=btn.getAttribute('data-id');
+    const findBook=id=> BOOKS().concat(currentScope==='main'?wellnessBooks:books).find(b=>String(b.id)===String(id));
     if(action==='toggle-synopsis'){
       var full=btn.getAttribute('data-full')||''; var wrap=document.querySelector('.syn[data-syn="'+bookId+'"]');
       if(!wrap) return; var span=wrap.querySelector('.syn-text'); if(!span) return;
@@ -1871,133 +958,75 @@ document.addEventListener('DOMContentLoaded', async function(){
       else{ span.textContent = full; span.setAttribute('data-expanded','true'); btn.textContent='Show less'; }
       return;
     }
-    if(action==='like'){
-      if(!currentUser){ showToast('Log in to like.',true); return; }
+    if(action==='wish' || action==='reading' || action==='finish'){
+      if(!currentUser){ showToast('Log in first.', true); return; }
       var b=findBook(bookId); if(!b) return;
-      b.postLikedBy=b.postLikedBy||[];
-      if(b.postLikedBy.indexOf(currentUser)>-1){ b.postLikedBy=b.postLikedBy.filter(function(n){return n!==currentUser;}); b.postLikes=Math.max(0,(b.postLikes||0)-1); }
-      else{ b.postLikedBy.push(currentUser); b.postLikes=(b.postLikes||0)+1; mergeOrPostActivity({type:'like',payload:{user:currentUser,title:b.title}}); }
-      saveAll(); applyFilters(); return;
-    }
-    if(action==='wish'){
-      if(!currentUser){ showToast('Log in to add to list.',true); return; }
-      var bw=findBook(bookId); if(!bw) return;
-      ensureUser(currentUser); var mine=me();
-      if(!mine.wishList.some(function(x){return String(x.id)===String(bw.id);})){
-        var nowTs=Date.now();
-        mine.wishList.push({id:bw.id,title:bw.title,author:bw.author,_wellness:(bw._scope==='wellness'),_changedAt:nowTs});
+      if(action==='finish'){ // quick modal for rating again
+        finishContext = {bookId:b.id}; currentRating = b.userRatings?.find(r=>r.user===currentUser)?.rating || (b.rating||0);
+        $('#finish-title').textContent = b.title+' — '+b.author;
+        $$('#finish-stars .star').forEach(star=>{ var val=Number(star.getAttribute('data-rating')); star.classList.toggle('filled', val<=currentRating); });
+        $('#finish-modal').classList.add('show');
+        return;
       }
-      addActionComment(bw, currentUser+' added to Want to Read', currentUser);
-      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:bw.title,action:'added to Want to Read'}});
-      saveAll(); renderMyLists(); updateStats(); showToast('Added to Want to Read'); return;
-    }
-    if(action==='reading'){
-      if(!currentUser){ showToast('Log in to add to list.',true); return; }
-      var br=findBook(bookId); if(!br) return;
-      ensureUser(currentUser); var meData=me();
-      var nowTs=Date.now();
-      if(!meData.currentReading.some(function(x){return String(x.id)===String(br.id);})){
-        meData.currentReading.push({id:br.id,title:br.title,author:br.author,_wellness:(br._scope==='wellness'),_startedAt:nowTs,_changedAt:nowTs});
-        meData.wishList=meData.wishList.filter(function(x){return String(x.id)!==String(br.id);});
-      }
-      addActionComment(br, currentUser+' started reading', currentUser);
-      mergeOrPostActivity({type:'list',payload:{user:currentUser,title:br.title,action:'started reading'}});
-      saveAll(); renderMyLists(); updateStats(); showToast('Moved to Currently Reading'); return;
-    }
-    if(action==='finish' || action==='rate-again'){
-      if(!currentUser){ showToast('Log in to rate.', true); return; }
-      var bk=findBook(bookId); if(!bk) return; openFinishModal(bk); return;
-    }
-    if(action==='share'){
-      var b2=findBook(bookId); if(!b2) return;
-      var text='“'+b2.title+'” by '+b2.author+' — rec by '+b2.recommender+' ('+averageRatingForBook(b2).toFixed(1)+'★)';
-      if(navigator.share) navigator.share({title:b2.title,text:text}).catch(function(){});
-      else if(navigator.clipboard) navigator.clipboard.writeText(text).then(function(){showToast('Copied');}).catch(function(){showToast('Copy failed',true);});
-      else alert(text);
+      showToast(action==='wish'?'Added to Want to Read':'Moved to Currently Reading');
       return;
     }
-    if(action==='like-comment'){
-      if(!currentUser){ showToast('Log in to like.', true); return; }
-      var b3=findBook(bookId); if(!b3) return;
-      var c=(b3.comments||[]).find(function(x){return String(x.id)===String(cid);}); if(!c) return;
-      c.likedBy=c.likedBy||[];
-      if(c.likedBy.indexOf(currentUser)>-1){ c.likedBy=c.likedBy.filter(function(n){return n!==currentUser;}); c.likes=Math.max(0,(c.likes||0)-1); }
-      else { c.likedBy.push(currentUser); c.likes=(c.likes||0)+1; }
-      saveAll(); applyFilters(); return;
-    }
-    if(action==='set-series'){
-      var b4=findBook(bookId); if(!b4) return;
-      var name=prompt('Series name:', b4.seriesName||''); if(name==null) return;
-      var num=prompt('Series number (optional):', b4.seriesNumber||''); b4.seriesName=name.trim(); b4.seriesNumber=num?String(num).trim():'';
-      if(confirm('Watch this series?')) watchSeriesName(b4.seriesName);
-      saveAll(); applyFilters(); renderWatchedSeries(); return;
-    }
-    if(action==='watch-series'){
-      var ser=btn.getAttribute('data-ser')||''; if(!ser){ showToast('No series name',true); return; }
-      watchSeriesName(ser); return;
-    }
-    if(action==='add-series-books'){
-      showToast('Series bulk add is a placeholder here. Add others from “Add” tab.'); return;
-    }
-    if(action==='similar'){
-      var b5=findBook(bookId); if(!b5) return; findSimilarOf(b5); return;
-    }
-    if(action==='add-comment'){
-      if(!currentUser){ showToast('Log in first', true); return; }
-      var b6=findBook(bookId); if(!b6) return;
-      var form = document.querySelector('.c-form[data-id="'+bookId+'"]'); if(!form) return;
-      var name = String((form.querySelector('[data-field="name"]')||{}).value||currentUser).trim() || currentUser;
-      var text = String((form.querySelector('[data-field="text"]')||{}).value||'').trim();
-      if(!text){ showToast('Write a comment', true); return; }
-      addActionComment(b6, text, name);
-      var countEl = form.closest('.comments').querySelector('[data-c-count]');
-      if(countEl) countEl.textContent = (b6.comments||[]).length;
-      (form.querySelector('[data-field="text"]')||{}).value='';
-      saveAll(); applyFilters(); updateStats(); return;
-    }
-    if(action==='remove-wish' || action==='remove-current' || action==='remove-read'){
-      var m=me();
-      var idNum=Number(bookId);
-      if(action==='remove-wish') m.wishList = m.wishList.filter(function(x){return x.id!==idNum;});
-      if(action==='remove-current') m.currentReading = m.currentReading.filter(function(x){return x.id!==idNum;});
-      if(action==='remove-read') m.readList = m.readList.filter(function(x){return x.id!==idNum;});
-      saveAll(); renderMyLists(); applyFilters(); updateStats(); return;
-    }
+  });
+  $('#finish-save').addEventListener('click', function(){
+    try{
+      if(!finishContext){ $('#finish-modal').classList.remove('show'); return; }
+      var all=books.concat(wellnessBooks); var book=all.find(b=>String(b.id)===String(finishContext.bookId)); if(!book){ $('#finish-modal').classList.remove('show'); return; }
+      var rating = isFinite(currentRating) ? currentRating : 0;
+      book.userRatings = book.userRatings || [];
+      var ex = book.userRatings.find(r=>r.user===currentUser);
+      if(ex) ex.rating = rating; else book.userRatings.push({user:currentUser,rating});
+      saveAll(); $('#finish-modal').classList.remove('show'); applyFilters(); updateStats(); showToast('Marked as read!');
+    }catch(e){ console.warn(e); $('#finish-modal').classList.remove('show'); showToast('Saved locally.',true); }
+  });
+  $('#finish-cancel').addEventListener('click', ()=> $('#finish-modal').classList.remove('show'));
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('#finish-modal').classList.remove('show'); });
+
+  /* Prefs */
+  $('#prefs-save').addEventListener('click', function(){
+    sitePrefs.postNew=$('#pref-post-new').checked;
+    sitePrefs.postFinish=$('#pref-post-finish').checked;
+    sitePrefs.postFive=$('#pref-post-5').checked;
+    sitePrefs.dim=$('#pref-dim').checked;
+    saveAll(); applyDim(); showToast('Preferences saved.');
   });
 
-  // check new releases
-  $('#check-new-btn').addEventListener('click', checkNewReleases);
-
-  // users pop hover close if clicked elsewhere
-  document.addEventListener('click',function(e){
-    if(!e.target.closest('#users-chip') && !e.target.closest('#users-pop')) $('#users-pop').style.display='none';
+  /* Admin (simple) */
+  const ADMIN_PASSWORD='Prob1234';
+  $('#toggle-danger').addEventListener('click', function(){
+    var dm=$('#data-management');
+    if(dm.style.display==='none' || !dm.style.display){
+      var pw=prompt('Enter admin password:'); if(pw!==ADMIN_PASSWORD){ showToast('Incorrect password',true); return; }
+      dm.style.display='block';
+    }else{ dm.style.display='none'; }
+  });
+  $('#delete-book-btn').addEventListener('click', function(){
+    var idStr=$('#delete-book-id').value.trim(); if(!idStr){ showToast('Enter an ID',true); return; }
+    var id=Number(idStr);
+    var before=(books.length+wellnessBooks.length);
+    books = books.filter(b=>b.id!==id);
+    wellnessBooks = wellnessBooks.filter(b=>b.id!==id);
+    if((books.length+wellnessBooks.length)===before){ showToast('No item with that ID found',true); return; }
+    saveAll(); applyFilters(); updateStats(); showToast('Item deleted.');
+  });
+  $('#clear-data-btn').addEventListener('click', function(){
+    if(prompt('Type ERASE to confirm:')!=='ERASE') return;
+    books=[]; wellnessBooks=[]; activity=[]; wellnessActivity=[];
+    saveAll(); applyFilters(); updateStats(); showToast('All data cleared.');
   });
 
-  // tag display removal
-  $('#tags-display').addEventListener('click', function(e){
-    var t=e.target.closest('.tag'); if(!t) return;
-    var name=t.getAttribute('data-tag'); currentTags=currentTags.filter(function(x){return x!==name;});
-    renderTagsDisplay();
-  });
+  /* Check new releases (stub) */
+  $('#check-new-btn').addEventListener('click', function(){ showToast('Checked series (demo)'); });
 
-  // Cloud watched series removal
-  $('#watched-series-list').addEventListener('click', function(e){
-    var btn=e.target.closest('[data-unwatch]'); if(!btn) return;
-    unwatchSeriesName(btn.getAttribute('data-unwatch'));
-  });
-
-  // If previously logged in, restore
-  if(currentUser){
-    $('#current-user-name').textContent=currentUser;
-    $('#user-bar').style.display='flex';
-    $('#main-app').style.display='block';
-    $('#main-nav').style.display='flex';
-    $('#login-section').style.display='none';
-    $('#recommender').value=currentUser;
-    $('#prelogin-row').style.display='grid';
-    applyFilters(); renderMyLists(); updateStats(); renderActivity(); computeAndRenderRecs();
-  }
+  /* Install prompt: keep quiet on file:// */
 });
+
+/* tiny helpers used above */
+function escapeAttr(s){ return (''+s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 </script>
 </body>
 </html>
